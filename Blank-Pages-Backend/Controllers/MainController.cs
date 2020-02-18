@@ -13,10 +13,11 @@ namespace Blank_Pages_Backend.Controllers
         private BlankPagesDbContext _dbContext;
         private readonly Utilities _utils;
 
-        public MainController(BlankPagesDbContext context)
+        public MainController(BlankPagesDbContext context, Utilities utils)
         {
             _dbContext = context;
-            _utils = new Utilities(_dbContext);
+            utils.SetDbContext(_dbContext);
+            _utils = utils;
         }
 
         #region Articles
@@ -27,11 +28,11 @@ namespace Blank_Pages_Backend.Controllers
             return Ok(_dbContext.Articles);
         }
 
-        [HttpGet("articles/{id}")]
-        public async Task<ActionResult<Article>> GetArticleById(int id)
-        {
-            return Ok();
-        }
+        //[HttpGet("articles/{id}")]
+        //public async Task<ActionResult<Article>> GetArticleById(int id)
+        //{
+        //    return Ok();
+        //}
 
         [HttpPut("/articles/{id}")]
         public IActionResult UpdateArticle(int id)
@@ -60,11 +61,11 @@ namespace Blank_Pages_Backend.Controllers
             return Ok();
         }
 
-        [HttpGet("search/q?={searchPhrase}")]
-        public async Task<ActionResult<List<Article>>> GetArticlesWithPhrase(string phrase)
-        {
-            return Ok();
-        }
+        //[HttpGet("search/q?={searchPhrase}")]
+        //public async Task<ActionResult<List<Article>>> GetArticlesWithPhrase(string phrase)
+        //{
+        //    return Ok();
+        //}
 
         #endregion
 
@@ -82,11 +83,11 @@ namespace Blank_Pages_Backend.Controllers
             return Ok();
         }
 
-        [HttpGet("/authors/{id}")]
-        public Task<ActionResult<Author>> GetAuthorPage(int id)
-        {
-            return Ok();
-        }
+        //[HttpGet("/authors/{id}")]
+        //public Task<ActionResult<Author>> GetAuthorPage(int id)
+        //{
+        //    return Ok();
+        //}
 
         [HttpPut("/authors/{id}")]
         public IActionResult UpdateAuthor(int id)

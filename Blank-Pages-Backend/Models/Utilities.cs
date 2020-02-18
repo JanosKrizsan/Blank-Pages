@@ -7,13 +7,15 @@ namespace Blank_Pages_Backend.Models
 {
     public class Utilities
     {
-        BlankPagesDbContext _dbContext;
+        private BlankPagesDbContext _dbContext;
 
-        public Utilities(BlankPagesDbContext context)
+        #region General
+
+        public void SetDbContext(BlankPagesDbContext context)
         {
             _dbContext = context;
         }
-        #region General
+
         #endregion
 
         #region Article Handling
