@@ -7,13 +7,13 @@ namespace Blank_Pages_Backend.Models
 {
     public class Utilities
     {
-        private BlankPagesDbContext _dbContext;
+        private DataProvider _provider;
 
         #region General
 
-        public void SetDbContext(BlankPagesDbContext context)
+        public void SetDbContext(DataProvider provider)
         {
-            _dbContext = context;
+            _provider = provider;
         }
 
         #endregion
@@ -21,7 +21,7 @@ namespace Blank_Pages_Backend.Models
         #region Article Handling
         public Article ReadFromFile(int articleId)
         {
-            var articlePath = _dbContext.Articles.Find(articleId).FilePath;
+            var articlePath = _provider.Articles.Find(articleId).FilePath;
 
             var fileName = Path.GetFileName(articlePath);
             var saveFilePath = articlePath.Replace(fileName, "");
@@ -48,7 +48,7 @@ namespace Blank_Pages_Backend.Models
 
         public bool VerifyPassword(string password, Author author)
         {
-            var authorPass = _dbContext.Authors.Find(author.Id).PassHash;
+            var authorPass = _provider.Authors.Find(author.Id).PassHash;
             return BCrypt.Net.BCrypt.Verify(password, authorPass);
         }
 

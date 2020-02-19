@@ -1,8 +1,5 @@
-﻿using Blank_Pages_Backend.Data;
-using Blank_Pages_Backend.Models;
+﻿using Blank_Pages_Backend.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Blank_Pages_Backend.Controllers
 {
@@ -10,13 +7,13 @@ namespace Blank_Pages_Backend.Controllers
     [Route("[controller]")]
     public class MainController : ControllerBase
     {
-        private BlankPagesDbContext _dbContext;
+        private DataProvider _provider;
         private readonly Utilities _utils;
 
-        public MainController(BlankPagesDbContext context, Utilities utils)
+        public MainController(DataProvider provider, Utilities utils)
         {
-            _dbContext = context;
-            utils.SetDbContext(_dbContext);
+            _provider = provider;
+            utils.SetDbContext(_provider);
             _utils = utils;
         }
 
@@ -25,7 +22,7 @@ namespace Blank_Pages_Backend.Controllers
         [HttpGet]
         public IActionResult GetMainPage()
         {
-            return Ok(_dbContext.Articles);
+            return Ok();
         }
 
         //[HttpGet("articles/{id}")]

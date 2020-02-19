@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Blank_Pages_Backend.Migrations
 {
-    [DbContext(typeof(BlankPagesDbContext))]
+    [DbContext(typeof(DataProvider))]
     partial class BlankPagesDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

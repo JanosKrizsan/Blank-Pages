@@ -13,5 +13,12 @@ namespace Blank_Pages_Backend.Data
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Author>()
+                .HasIndex(i => i.Name)
+                .IsUnique();
+        }
+
     }
 }
