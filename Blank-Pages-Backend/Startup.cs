@@ -30,7 +30,7 @@ namespace Blank_Pages_Backend
         {
             services.AddControllers();
             services.AddSingleton<Utilities>();
-            services.AddSingleton<DataProvider>();
+            services.AddSingleton<DataHandler>();
             services.AddDbContext<BlankPagesDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }
 

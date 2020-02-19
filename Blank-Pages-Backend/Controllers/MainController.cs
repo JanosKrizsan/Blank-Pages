@@ -7,10 +7,10 @@ namespace Blank_Pages_Backend.Controllers
     [Route("[controller]")]
     public class MainController : ControllerBase
     {
-        private DataProvider _provider;
+        private DataHandler _provider;
         private readonly Utilities _utils;
 
-        public MainController(DataProvider provider, Utilities utils)
+        public MainController(DataHandler provider, Utilities utils)
         {
             _provider = provider;
             utils.SetDbContext(_provider);

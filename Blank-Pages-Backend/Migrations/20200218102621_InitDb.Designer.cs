@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Blank_Pages_Backend.Migrations
 {
-    [DbContext(typeof(DataProvider))]
+    [DbContext(typeof(BlankPagesDbContext))]
     [Migration("20200218102621_InitDb")]
     partial class InitDb
     {
