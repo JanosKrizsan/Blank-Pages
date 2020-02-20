@@ -29,7 +29,8 @@ namespace Blank_Pages_Backend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSingleton<Utilities>();
+            services.AddTransient<DataProvider, DataProvider>();
+            services.AddTransient<Utilities, Utilities>();
             services.AddDbContext<BlankPagesDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }
 
