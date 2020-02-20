@@ -1,5 +1,7 @@
-﻿using Blank_Pages_Backend.Data;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -7,11 +9,12 @@ namespace Blank_Pages_Backend.Models
 {
     public class Utilities
     {
-        private DataHandler _provider;
+        private DataProvider _provider;
 
         #region General
 
-        public void SetDbContext(DataHandler provider)
+        private const string _saveFilePath = @"C:\Users\Public\Documents\Articles\";
+        public void SetDbContext(DataProvider provider)
         {
             _provider = provider;
         }
@@ -19,6 +22,16 @@ namespace Blank_Pages_Backend.Models
         #endregion
 
         #region Article Handling
+
+        public Article GetArticle(int id)
+        {
+            return _provider.GetArticleById(id);
+        }
+
+        public List<int> GetArticleIds()
+        {
+            return _provider.GetAllArticleIds();
+        }
         public Article ReadFromFile(int articleId)
         {
             var articlePath = _provider.GetArticleById(articleId).FilePath;
@@ -32,23 +45,125 @@ namespace Blank_Pages_Backend.Models
             return (Article)serializer.Deserialize(reader);
         }
 
-        public void SaveToFile(Article article)
+        public void SaveToFile(Article article, bool update = false)
         {
-            var saveFilePath = @"C:\Users\Public\Documents\Articles";
+            if (update)
+            {
+                article.CreationDate = DateTime.Now;
+            }
             var fileName = article.Title.Trim().Replace(" ", "-") + ".xml";
+            article.FilePath = string.Concat(_saveFilePath, fileName);
             var serializer = new XmlSerializer(typeof(Article));
 
-            using var writer = new StreamWriter(string.Concat(saveFilePath, fileName));
+            using var writer = new StreamWriter(article.FilePath);
             serializer.Serialize(writer, article);
+
+            if (update)
+            {
+                _provider.UpdateArticle(article);
+            }
+            else
+            {
+                _provider.AddArticle(article);
+            }
+        }
+
+        public void DeleteArticle(Article article)
+        {
+            var files = Directory.GetFiles(_saveFilePath).ToList();
+            var file = files.FirstOrDefault(fl => Path.GetFullPath(fl).Equals(article.FilePath));
+
+            if (!string.IsNullOrEmpty(file))
+            {
+                File.Delete(file);
+                _provider.DeleteArticle(article.Id);
+            }
+
+        }
+
+        #endregion
+
+        #region Source Handling
+
+        public List<Source> GetAllSources()
+        {
+            return _provider.GetAllSources();
+        }
+
+        public Source GetSource(int id)
+        {
+            return _provider.GetSourceById(id);
+        }
+
+        public void AddSource(Source source)
+        {
+            _provider.AddSource(source);
+        }
+
+        public void UpdateSource(Source source)
+        {
+             _provider.UpdateSource(source);
+        }
+
+        public void RemoveSource(int id)
+        {
+            _provider.DeleteSourceById(id);
+        }
+
+        #endregion
+
+        #region Search Handling
+
+        public List<Article> SearchPhrase(string phrase)
+        {
+            return _provider.GetFilteredArticles(phrase);
         }
 
         #endregion
 
         #region Author Handling
 
-        public bool VerifyPassword(string password, Author author)
+        public bool IsAuthorized(string name, string pass)
         {
-            var authorPass = _provider.GetAuthorByName(author.Name).PassHash;
+            return VerifyPassword(pass, name);
+        }
+        public Author GetAuthor(string name)
+        {
+            return _provider.GetAuthorByName(name);
+        }
+
+        public void AddAuthor(string name, string pass)
+        {
+            var author = new Author
+            {
+                Name = name,
+                PassHash = HashPass(pass)
+            };
+
+            _provider.AddAuthor(author);
+        }
+
+        public void EditAuthor(string name, string pass, string newPass)
+        {
+            var author = _provider.GetAuthorByName(name);
+            author.PassHash = HashPass(newPass);
+            _provider.UpdateAuthor(author);
+        }
+
+        public void DeleteAuthor(int id)
+        {
+
+            _provider.DeleteAuthor(id);
+        }
+
+        public bool DoesAuthorExist(string name)
+        {
+            return _provider.GetAuthorByName(name) != null ? true : false;
+        }
+
+        public bool VerifyPassword(string password, string name)
+        {
+            var authorPass = _provider.GetAuthorByName(name).PassHash;
             return BCrypt.Net.BCrypt.Verify(password, authorPass);
         }
 
@@ -56,6 +171,7 @@ namespace Blank_Pages_Backend.Models
         {
             return BCrypt.Net.BCrypt.HashPassword(password);
         }
+
         #endregion
     }
 }
