@@ -85,15 +85,16 @@ namespace Blank_Pages_Backend.Models
             return _provider.GetArticleByTitle(title) != null ? true : false;
         }
 
-        public void DeleteArticle(Article article)
+        public void DeleteArticle(int id)
         {
+            var article = _provider.GetArticleById(id);
             var files = Directory.GetFiles(_saveFilePath).ToList();
             var file = files.FirstOrDefault(fl => Path.GetFullPath(fl).Equals(article.FilePath));
 
             if (!string.IsNullOrEmpty(file))
             {
                 File.Delete(file);
-                _provider.DeleteArticle(article.Id);
+                _provider.DeleteArticle(article);
             }
 
         }

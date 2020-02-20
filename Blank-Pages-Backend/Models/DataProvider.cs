@@ -114,10 +114,10 @@ namespace Blank_Pages_Backend.Models
             }
         }
 
-        public void DeleteArticle(int id)
+        public void DeleteArticle(Article article)
         {
-            _context.Articles.Remove(GetArticleById(id));
-            DeleteSourcesByArticleId(id);
+            _context.Articles.Remove(article);
+            DeleteSourcesByArticleId(article.Id);
         }
 
         public void DeleteArticlesByAuthor(string name)

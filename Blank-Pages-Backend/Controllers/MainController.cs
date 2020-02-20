@@ -72,9 +72,9 @@ namespace Blank_Pages_Backend.Controllers
         }
 
         [HttpDelete("articles/{id}")]
-        public IActionResult ArticleDelete(Article article)
+        public IActionResult ArticleDelete(int id)
         {
-            _utils.DeleteArticle(article);
+            _utils.DeleteArticle(id);
             return Redirect(_main);
         }
 
