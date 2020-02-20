@@ -4,6 +4,7 @@
 
 ## What is this thing?
 
+This is a blog-template which uses an EF Core database for persistence of Articles, Authors and their relevant Sources data. It furthermore saves Articles serialized as XML, mainly for content-related and safety purposes. This application is still in development.
 
 ## Tech Used
 
@@ -15,12 +16,12 @@
 ## Features
 
 - Is a single-page web application
-- Hidden admin login, authentication via JWT token
-- Admin (site owner) is able to create, edit, post new articles
-- Saves relevant information of an article into the database
-- Articles are saved stored in an XML serialized format, which is deserialized for publication
+- Hidden login, authentication, JWT token
+- Author(s) are able to create, edit, post new articles
+- Saves information of an article into the database
+- Articles are stored in an XML serialized format, which is deserialized for publication
 - Retrieves articles from related, database-saved file-names from the local host
-- Lazy loading of articles, upon viewing them
+- Lazy loading of article data, upon viewing them
 
 ### Further Planned Features
 
