@@ -32,6 +32,12 @@ namespace Blank_Pages_Backend.Models
         {
             return _provider.GetAllArticleIds();
         }
+
+        public List<Article> GetAllArticleData()
+        {
+            return _provider.GetAllArticles();
+        }
+
         public Article ReadFromFile(int articleId)
         {
             var articlePath = _provider.GetArticleById(articleId).FilePath;
@@ -51,6 +57,12 @@ namespace Blank_Pages_Backend.Models
             {
                 article.CreationDate = DateTime.Now;
             }
+
+            if (!Directory.Exists(_saveFilePath))
+            {
+                Directory.CreateDirectory(_saveFilePath);
+            }
+
             var fileName = article.Title.Trim().Replace(" ", "-") + ".xml";
             article.FilePath = string.Concat(_saveFilePath, fileName);
             var serializer = new XmlSerializer(typeof(Article));
@@ -66,6 +78,11 @@ namespace Blank_Pages_Backend.Models
             {
                 _provider.AddArticle(article);
             }
+        }
+
+        public bool DoesArticleExist(string title)
+        {
+            return _provider.GetArticleByTitle(title) != null ? true : false;
         }
 
         public void DeleteArticle(Article article)
@@ -98,6 +115,11 @@ namespace Blank_Pages_Backend.Models
         public void AddSource(Source source)
         {
             _provider.AddSource(source);
+        }
+
+        public bool DoesSourceExist(string name)
+        {
+            return _provider.GetSourceByName(name) != null ? true : false;
         }
 
         public void UpdateSource(Source source)

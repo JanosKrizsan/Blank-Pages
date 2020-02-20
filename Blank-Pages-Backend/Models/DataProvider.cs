@@ -59,9 +59,12 @@ namespace Blank_Pages_Backend.Models
 
         public List<int> GetAllArticleIds()
         {
-            var articles = _context.Articles.Select(a => a.Id).ToList();
-            articles.Sort();
-            return articles;
+            return _context.Articles.Select(a => a.Id).ToList();
+        }
+
+        public List<Article> GetAllArticles()
+        {
+            return _context.Articles.Select(a => a).ToList();
         }
 
         public List<Article> GetFilteredArticles(string phrase)
@@ -76,6 +79,11 @@ namespace Blank_Pages_Backend.Models
         public Article GetArticleById(int id)
         {
             return _context.Articles.Find(id);
+        }
+
+        public Article GetArticleByTitle(string title)
+        {
+            return _context.Articles.FirstOrDefault(a => a.Title.Equals(title) || a.SubTitle.Equals(title));
         }
 
         public List<Article> GetArticlesByAuthor(string authorName)
@@ -134,6 +142,11 @@ namespace Blank_Pages_Backend.Models
         public Source GetSourceById(int id)
         {
             return _context.Sources.Find(id);
+        }
+
+        public Source GetSourceByName(string name)
+        {
+            return _context.Sources.FirstOrDefault(s => s.Name.Equals(name));
         }
 
         public List<Source> GetSourcesByArticleId(int id)
