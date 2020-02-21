@@ -19,6 +19,6 @@ namespace Blank_Pages_Backend.Models
         public string PassHash { get; set; }
 
         [XmlIgnore]
-        public IList<Article> ArticlesWritten { get; set; }
+        public List<Article> ArticlesWritten { get; set; }
     }
 }

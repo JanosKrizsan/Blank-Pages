@@ -51,7 +51,7 @@ namespace Blank_Pages_Backend.Controllers
            
         }
         [HttpGet("articles/{id}")]
-        public ActionResult<Article> GetArticleById(int id)
+        public ActionResult<Article> GetArticleById([FromRoute] int id)
         {
             var article = _utils.GetArticle(id);
 
@@ -64,15 +64,15 @@ namespace Blank_Pages_Backend.Controllers
             return NotFound();
         }
 
-        [HttpPut("/articles/{id}")]
-        public IActionResult UpdateArticle(Article article)
+        [HttpPut("articles/{id}")]
+        public IActionResult UpdateArticle([FromBody] Article article)
         {
             _utils.SaveToFile(article, true);
             return Ok("Successful Article Update");
         }
 
         [HttpDelete("articles/{id}")]
-        public IActionResult ArticleDelete(int id)
+        public IActionResult ArticleDelete([FromRoute] int id)
         {
             _utils.DeleteArticle(id);
             return Redirect(_main);
@@ -105,7 +105,7 @@ namespace Blank_Pages_Backend.Controllers
         }
 
         [HttpGet("sources/{id}")]
-        public ActionResult<Source> GetSourceInfo(int id)
+        public ActionResult<Source> GetSourceInfo([FromRoute] int id)
         {
             var source = _utils.GetSource(id);
             if (source == null)
@@ -114,17 +114,16 @@ namespace Blank_Pages_Backend.Controllers
             }
             return Ok(source);
         }
-
-
+        
         [HttpDelete("sources/{id}")]
-        public ActionResult DeleteSource(int id)
+        public IActionResult DeleteSource([FromRoute] int id)
         {
             _utils.RemoveSource(id);
             return Redirect("sources/");
         }
 
         [HttpPost("sources/add")]
-        public ActionResult AddSource(Source source)
+        public IActionResult AddSource([FromBody] Source source)
         {
             if (_utils.DoesSourceExist(source.Name))
             {
@@ -135,7 +134,7 @@ namespace Blank_Pages_Backend.Controllers
         }
 
         [HttpPut("sources/{id}")]
-        public ActionResult<Source> UpdateSourceInfo(Source source)
+        public IActionResult UpdateSourceInfo([FromBody] Source source)
         {
             _utils.UpdateSource(source);
             return Ok("Succesful Source Update");
@@ -146,9 +145,9 @@ namespace Blank_Pages_Backend.Controllers
         #region Search
 
         [HttpPost("search/q={searchPhrase}")]
-        public ActionResult<List<Article>> GetArticlesWithPhrase(string phrase)
+        public ActionResult<List<Article>> GetArticlesWithPhrase([FromRoute] string searchPhrase)
         {
-            var articles = _utils.SearchPhrase(phrase);
+            var articles = _utils.SearchPhrase(searchPhrase);
 
             if (articles.Count != 0)
             {
@@ -161,42 +160,42 @@ namespace Blank_Pages_Backend.Controllers
 
         #region Authors
 
-        [HttpPost("/authors/login")]
-        public IActionResult LoginAuthor(string name, string pass)
+        [HttpPost("authors/login")]
+        public IActionResult LoginAuthor([FromBody] AuthorDto author)
         {
-            if (!_utils.DoesAuthorExist(name))
+            if (_utils.DoesAuthorExist(author.Name))
             {
-                return _utils.IsAuthorized(name, pass) ? Ok("Successful Login") : ValidationProblem();
+                return _utils.IsAuthorized(author.Name, author.Pass) ? Ok("Successful Login") : ValidationProblem("Password Or Username Invalid");
             }
             return ValidationProblem(_unauthorized);
         }
 
-        [HttpPost("/authors/register")]
-        public IActionResult RegisterAuthor(string name, string pass)
+        [HttpPost("authors/register")]
+        public IActionResult RegisterAuthor([FromBody] AuthorDto author)
         {
-            if (!_utils.DoesAuthorExist(name))
+            if (!_utils.DoesAuthorExist(author.Name))
             {
-                _utils.AddAuthor(name, pass);
+                _utils.AddAuthor(author.Name, author.Pass);
                 return Ok("Successful Registration");
             }
             return ValidationProblem(_unauthorized);
         }
 
-        [HttpPut("/authors/{id}")]
-        public IActionResult UpdateAuthor(string name, string pass, string newPass)
+        [HttpPut("authors/{id}")]
+        public IActionResult UpdateAuthor([FromBody] AuthorDto author)
         {
-            if (_utils.IsAuthorized(name, pass))
+            if (_utils.IsAuthorized(author.Name, author.Pass))
             {
-                _utils.EditAuthor(name, pass, newPass);
+                _utils.EditAuthor(author.Name, author.Pass, author.NewPass);
                 return Ok("Successful Password Update");
             }
             return ValidationProblem(_unauthorized);
         }
 
-        [HttpDelete("/authors/{id}")]
-        public IActionResult DeleteAuthor(int id, string name, string pass)
+        [HttpDelete("authors/{id}")]
+        public IActionResult DeleteAuthor([FromRoute] int id, [FromBody] AuthorDto author)
         {
-            if (_utils.IsAuthorized(name, pass))
+            if (_utils.IsAuthorized(author.Name, author.Pass))
             {
                 _utils.DeleteAuthor(id);
                 return Redirect("main/");

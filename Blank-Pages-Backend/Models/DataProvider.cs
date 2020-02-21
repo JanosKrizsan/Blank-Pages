@@ -1,5 +1,6 @@
 ﻿using Blank_Pages_Backend.Data;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -44,10 +45,11 @@ namespace Blank_Pages_Backend.Models
             foreach (var prop in entry.Properties)
             {
                 var newVal = update.GetType().GetProperty(prop.Metadata.Name).GetValue(update, null);
+                var currentType = newVal.GetType();
 
-                if (prop.CurrentValue != newVal)
+                if (!Convert.ChangeType(prop.CurrentValue, currentType).Equals(newVal))
                 {
-                    prop.CurrentValue = newVal;
+                    prop.CurrentValue = (object)newVal;
                 }
             }
 
@@ -69,8 +71,11 @@ namespace Blank_Pages_Backend.Models
 
         public List<Article> GetFilteredArticles(string phrase)
         {
-            var filtered = _context.Articles.Where(a => a.Title.Contains(phrase) || a.SubTitle.Contains(phrase) || GetAuthorById(a.ArticleAuthor.Id).Name.Contains(phrase))
-                .Select(a => a).ToList();
+            //TODO rewrite this
+            var filtered = _context.Articles.Where(a => a.Title.Contains(phrase) || 
+                            a.SubTitle.Contains(phrase) || 
+                            GetAuthorById(a.ArticleAuthor.Id).Name.Contains(phrase))
+                            .ToList();
             filtered.Sort();
             return filtered;
 
@@ -84,13 +89,6 @@ namespace Blank_Pages_Backend.Models
         public Article GetArticleByTitle(string title)
         {
             return _context.Articles.FirstOrDefault(a => a.Title.Equals(title) || a.SubTitle.Equals(title));
-        }
-
-        public List<Article> GetArticlesByAuthor(string authorName)
-        {
-            return _context.Authors.Where(a => a.Name.Equals(authorName))
-                .Select(a => a.ArticlesWritten.ToList())
-                .FirstOrDefault(list => list is List<Article>);
         }
 
         public int AddArticle(Article article)
@@ -122,9 +120,12 @@ namespace Blank_Pages_Backend.Models
 
         public void DeleteArticlesByAuthor(string name)
         {
-            var articles = GetArticlesByAuthor(name);
-            articles.ForEach(rtcl => rtcl.Sources.ToList().ForEach(s => _context.Sources.Remove(s)));
-            _context.Articles.RemoveRange(articles);
+            var articles = GetAuthorByName(name).ArticlesWritten;
+            if (articles != null || articles.Count != 0)
+            {
+                articles.ForEach(rtcl => rtcl.Sources.ToList().ForEach(s => _context.Sources.Remove(s)));
+                _context.Articles.RemoveRange(articles);
+            }
             _context.SaveChanges();
         }
 

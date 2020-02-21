@@ -175,13 +175,12 @@ namespace Blank_Pages_Backend.Models
 
         public void DeleteAuthor(int id)
         {
-
             _provider.DeleteAuthor(id);
         }
 
         public bool DoesAuthorExist(string name)
         {
-            return _provider.GetAuthorByName(name) != null ? true : false;
+            return _provider.GetAuthorByName(name) == null ? false : true;
         }
 
         public bool VerifyPassword(string password, string name)
