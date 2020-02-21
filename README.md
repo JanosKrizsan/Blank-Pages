@@ -34,6 +34,9 @@ This is a blog-template which uses an EF Core database for persistence of Articl
 Main Page:<br>
   Includes the list of newest articles posted, in descending order.
   
+Articles:<br>
+  Articles, all of them.
+  
 Search:<br>
   A page for sorting and searching articles based on pre-determined categories.
 
