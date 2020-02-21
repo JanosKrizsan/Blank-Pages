@@ -42,7 +42,47 @@ Library:<br>
   
 ## Code Example
 
-None yet.
+Entry updater, it compares values and different ones are overwritten in the database on the tracked (State Modified) item.
+```
+        private void EntryUpdater(EntityEntry entry, object updatedEntry)
+        {
+            dynamic update;
+
+            switch (updatedEntry.GetType().Name)
+            {
+                case nameof(Article):
+                    update = (Article)updatedEntry;
+                    break;
+                case nameof(Author):
+                    update = (Author)updatedEntry;
+                    break;
+                case nameof(Source):
+                    update = (Source)updatedEntry;
+                    break;
+                default:
+                    update = string.Empty;
+                    break;
+            }
+
+            if (update is string)
+            {
+                return;
+            }
+
+            foreach (var prop in entry.Properties)
+            {
+                var newVal = update.GetType().GetProperty(prop.Metadata.Name).GetValue(update, null);
+                var currentType = newVal.GetType();
+
+                if (!Convert.ChangeType(prop.CurrentValue, currentType).Equals(newVal))
+                {
+                    prop.CurrentValue = (object)newVal;
+                }
+            }
+
+            _context.SaveChanges();
+        }
+```
 
 ## Miscellaneous
 
