@@ -3,7 +3,11 @@ Routes and views for the flask application.
 """
 
 from flask import Flask, request
+from Data_Provider.Handlers.query_handler import Query_Handler
+
 app = Flask(__name__)
+
+_queries = Query_Handler()
 
 @app.route('/',  methods=['GET'])
 def home():

@@ -1,5 +1,6 @@
 import psycopg2
 import psycopg2.extras
+from psycopg2 import sql
 
 class Connection_Handler(object):
 
@@ -8,50 +9,60 @@ class Connection_Handler(object):
 		self.host_add = "localhost" if address == None else address
 		self.password = password
 		self.db = db_name
-		self.conn_string = f"postgresql://{user}:{password}@{address}/{db_name}"
+		self.conn_string = f"postgresql://{self.user_name}:{self.password}@{self.host_add}/{self.db}"
+
 
 	def check_database_exists(self):
-		connection = None
+		self.conn = None
 		try:
-			connection = psycopg2.connect("user='postgres' host='localhost' password='postgres' port='5432'")
-		except:
-			print("Unable to connect to basic user.")
-		if connection is not None:
-			cursor = connection.cursor()
-			cursor.execute("SELECT datname FROM pg_database")
-			databases = cursor.fetchall()
+			self.conn = psycopg2.connect(host="localhost", user="postgres", password="postgres", port="5432")
+		except (Exception, psycopg2.DatabaseError) as error:
+			print("Unable to connect to database server.", error)
+		if self.conn is not None:
+			self.conn.autocommit = True
+			curs = self.conn.cursor()
+			curs.execute("SELECT datname FROM pg_database")
+			databases = curs.fetchall()
 			if self.db in databases:
-				self.read_sql_from_file()
+				self.read_sql_from_file("C:/Codecool/PetProject/Blank Pages/Data_Provider/Data_Provider/Static/blank_pages_db.sql")
 			else:
 				self.create_database("blank_pages_db")
 		else:
-			print("PSQL could not be reached.")
+			print("PSQL Database Provider could not be reached.")
 
 
 	def connect_to_db(self):
 		try:
-			self.con = psycopg2.connect(self.conn_string)
-			self.con.autocommit = True
-			return self.con()
+			con = psycopg2.connect(self.conn_string)
+			con.autocommit = True
 		except (Exception, psycopg2.DatabaseError) as error:
-			print("Database does not exist, or another error occurred", error)
+			print("Database does not exist, or another error occurred:", error)
+		return con
 
 
-	def create_database(self, db_name = self.db):
+	def create_database(self, db_name = None):
 		name = self.db if db_name == None else db_name
-		connect_to_db().cursor().execute(sql.SQL("CREATE DATABASE {}").format(sql.Identifier(name)))
+		self.conn = psycopg2.connect(host="localhost", user="postgres", password="postgres", port="5432")
+		self.conn.autocommit = True
+		self.conn.cursor().execute(sql.SQL("CREATE DATABASE {}").format(sql.Identifier(name)))
+		self.close_connections()
+
+	def close_connections(self):
+		self.conn.cursor().close()
+		self.conn.close()
 
 	def read_sql_from_file(self, file):
-		connect_to_db().cursor().execute(open(self.file_path, r).read())
+		self.connect_to_db().cursor().execute(open(file, r).read())
+		self.conn.autocommit = True
+		self.close_connections()
 
-
-	def handler(function):
+	def conn_handler(function):
 		def wrapper(*args, **kwargs):
-			con = self.connect_to_db()
-			dict_cur = con.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+			self.conn = self.connect_to_db()
+			dict_cur = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 			ret_value = function(dict_cur, *args, **kwargs)
 			dict_cur.close()
-			self.con.close()
+			self.conn.close()
 			return ret_value
 		return wrapper
 
