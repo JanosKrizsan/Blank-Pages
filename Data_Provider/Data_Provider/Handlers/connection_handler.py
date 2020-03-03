@@ -1,5 +1,7 @@
 import psycopg2
 import psycopg2.extras
+import itertools
+import io
 from psycopg2 import sql
 
 class Connection_Handler(object):
@@ -22,11 +24,12 @@ class Connection_Handler(object):
 			self.conn.autocommit = True
 			curs = self.conn.cursor()
 			curs.execute("SELECT datname FROM pg_database")
-			databases = curs.fetchall()
+			dbs = curs.fetchall()
+			databases = list(itertools.chain(*dbs))
 			if self.db in databases:
 				self.read_sql_from_file("C:/Codecool/PetProject/Blank Pages/Data_Provider/Data_Provider/Static/blank_pages_db.sql")
 			else:
-				self.create_database("blank_pages_db")
+				self.create_database(self.db)
 		else:
 			print("PSQL Database Provider could not be reached.")
 
