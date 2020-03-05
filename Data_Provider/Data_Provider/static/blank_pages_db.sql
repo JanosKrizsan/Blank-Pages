@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS dbo.Sources;
 CREATE TABLE Authors (
 	id SERIAL PRIMARY KEY,
 	name VARCHAR(30) NOT NULL,
-	password VARCHAR(200) NOT NULL,
+	password VARCHAR(200) NOT NULL
 );
 
 CREATE TABLE Articles (
@@ -14,7 +14,7 @@ CREATE TABLE Articles (
 	sub_title VARCHAR(40),
 	full_file_path VARCHAR(255),
 	author_id int NOT NULL,
-	creation_date DATETIME NOT NULL,
+	creation_date TIMESTAMP NOT NULL,
 	FOREIGN KEY(author_id) REFERENCES Authors(id)
 );
 

@@ -13,7 +13,7 @@ class Connection_Handler(object):
 		self.password = password
 		self.db = db_name
 		self.conn_string = f"postgresql://{self.user_name}:{self.password}@{self.host_add}/{self.db}"
-		self.file_path = self.get_relative_path() + "blank_pages_db.sql"
+		self.file_path = self.get_relative_path() + "\\blank_pages_db.sql"
 
 	def check_database_exists(self):
 		self.conn = None
@@ -28,7 +28,11 @@ class Connection_Handler(object):
 			dbs = curs.fetchall()
 			databases = list(itertools.chain(*dbs))
 			if self.db in databases:
-				self.read_sql_from_file(self.file_path)
+				curs.execute("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = %s);", ("'Author'",))
+				exists = curs.fetchone()[0]
+
+				if exists == False:
+					self.read_sql_from_file()
 			else:
 				self.create_database(self.db)
 		else:
@@ -57,21 +61,19 @@ class Connection_Handler(object):
 		self.conn.close()
 
 
-	def read_sql_from_file(self, file):
+	def read_sql_from_file(self):
 		conn = self.connect_to_db()
-		with open(file, 'r') as reader:
-			data = reader.read()
-			conn.cursor().execute(data)
+		conn.cursor().execute(open(self.file_path, 'r').read())
 		self.close_connections()
 
 	def get_relative_path(self):
-		base = ''
+		base = None
 		dirs =[dir for dir in os.listdir(os.path.abspath(os.getcwd())) if os.path.isdir(dir)]
 		for d in dirs:
 			if "Static" in os.listdir(d):
 				base = os.path.abspath(d) + "\Static"
 				break
-		if base.__eq__(''):
+		if base == None:
 			raise FileNotFoundError("The file or 'static' folder could not be found.")
 		return base
 
