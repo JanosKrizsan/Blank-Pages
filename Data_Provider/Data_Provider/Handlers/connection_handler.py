@@ -28,7 +28,7 @@ class Connection_Handler(object):
 			dbs = curs.fetchall()
 			databases = list(itertools.chain(*dbs))
 			if self.db in databases:
-				self.read_sql_from_file("C:/Codecool/PetProject/Blank Pages/Data_Provider/Data_Provider/Static/'blank_pages_db.sql'")
+				self.read_sql_from_file(self.file_path)
 			else:
 				self.create_database(self.db)
 		else:
