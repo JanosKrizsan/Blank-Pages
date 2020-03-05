@@ -30,8 +30,9 @@ namespace Blank_Pages_Backend.Models
         [XmlElement("CreationDate")]
         public DateTime CreationDate { get; set; }
 
-        [XmlElement("Sources")]
-        public IList<Source> Sources { get; set; }
+        [XmlArray("Sources"), XmlArrayItem("SourceItem")]
+        public List<Source> Sources { get; set; }
+
         public int CompareTo(object otherArticle)
         {
             var other = (Article)otherArticle;

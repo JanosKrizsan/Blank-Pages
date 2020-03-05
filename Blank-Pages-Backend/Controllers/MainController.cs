@@ -29,7 +29,7 @@ namespace Blank_Pages_Backend.Controllers
         {
             var articles = _utils.GetArticleIds();
 
-            if (articles != null)
+            if (articles.Count != 0)
             {
                 var contentData = new List<Article>();
                 articles.ForEach(id => contentData.Add(_utils.ReadFromFile(id)));
@@ -39,6 +39,17 @@ namespace Blank_Pages_Backend.Controllers
             return NoContent();
         }
 
+        [HttpGet("articles/")]
+        public ActionResult<List<Article>> GetArticlesPage()
+        {
+            var articles =_utils.GetAllArticleData();
+            if (articles.Count != 0)
+            {
+                return Ok(articles);
+            }
+            return NoContent();
+           
+        }
         [HttpGet("articles/{id}")]
         public ActionResult<Article> GetArticleById(int id)
         {
@@ -61,15 +72,19 @@ namespace Blank_Pages_Backend.Controllers
         }
 
         [HttpDelete("articles/{id}")]
-        public IActionResult ArticleDelete(Article article)
+        public IActionResult ArticleDelete(int id)
         {
-            _utils.DeleteArticle(article);
+            _utils.DeleteArticle(id);
             return Redirect(_main);
         }
 
         [HttpPost("articles/write")]
         public IActionResult AddNewArticle(Article article)
         {
+            if (_utils.DoesArticleExist(article.Title))
+            {
+                return Conflict("Article Exists");
+            }
             _utils.SaveToFile(article);
             return Ok("Successful Article Save");
         }
@@ -82,7 +97,7 @@ namespace Blank_Pages_Backend.Controllers
         public ActionResult<List<Source>> GetSourcesPage()
         {
             var sources = _utils.GetAllSources();
-            if(sources == null)
+            if(sources.Count == 0)
             {
                 return Redirect("sources/add");
             }
@@ -111,6 +126,10 @@ namespace Blank_Pages_Backend.Controllers
         [HttpPost("sources/add")]
         public ActionResult AddSource(Source source)
         {
+            if (_utils.DoesSourceExist(source.Name))
+            {
+                return Conflict("Source Exists");
+            }
             _utils.AddSource(source);
             return Ok("Successful Source Addition");
         }
@@ -126,12 +145,12 @@ namespace Blank_Pages_Backend.Controllers
 
         #region Search
 
-        [HttpPost("search/q?={searchPhrase}")]
+        [HttpPost("search/q={searchPhrase}")]
         public ActionResult<List<Article>> GetArticlesWithPhrase(string phrase)
         {
             var articles = _utils.SearchPhrase(phrase);
 
-            if (articles != null)
+            if (articles.Count != 0)
             {
                 return Ok(articles);
             }
