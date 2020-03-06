@@ -28,10 +28,9 @@ class Connection_Handler(object):
 			dbs = curs.fetchall()
 			databases = list(itertools.chain(*dbs))
 			if self.db in databases:
-				curs.execute("SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = %s);", ("'Author'",))
+				curs.execute(sql.SQL("SELECT EXISTS (SELECT table_name FROM INFORMAITON_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'public');"))
 				exists = curs.fetchone()[0]
-
-				if exists == False:
+				if not exists:
 					self.read_sql_from_file()
 			else:
 				self.create_database(self.db)
