@@ -25,13 +25,22 @@ class Connection_Handler(object):
 			self.conn.autocommit = True
 			curs = self.conn.cursor()
 			curs.execute("SELECT datname FROM pg_database")
-			dbs = curs.fetchall()
-			databases = list(itertools.chain(*dbs))
-			if self.db in databases:
-				curs.execute(sql.SQL("SELECT EXISTS (SELECT table_name FROM INFORMAITON_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'public');"))
+			databases = curs.fetchall()
+			dbs = list(itertools.chain(*databases))
+			if self.db in dbs:
+				#This always returns false in python, but true in PSQL
+				#TODO \\ ask about this
+				curs.execute(sql.SQL("""
+					SELECT EXISTS (
+						SELECT FROM pg_catalog.pg_class c
+						JOIN   pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+						WHERE  n.nspname = '{datbase}'
+						AND    c.relname = 'authors'
+						);
+				""").format(datbase = sql.Identifier(self.db)))
 				exists = curs.fetchone()[0]
-				if not exists:
-					self.read_sql_from_file()
+				#if exists == False:
+				#	self.read_sql_from_file()
 			else:
 				self.create_database(self.db)
 		else:
