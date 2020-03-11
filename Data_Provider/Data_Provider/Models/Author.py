@@ -1,15 +1,9 @@
-class Author(object):
+from .model_base import ModelBase
+
+class Author(ModelBase):
 
 	def __init__(self):
 		pass
-
-	@property
-	def prop_id(self):
-		return self.id
-
-	@property
-	def prop_name(self):
-		return self.name
 
 	@property
 	def prop_passhash(self):
@@ -18,14 +12,6 @@ class Author(object):
 	@property
 	def prop_articles_written(self):
 		return self.articles_written
-
-	@id.setter
-	def prop_id(self, value):
-		id = value
-
-	@name.setter
-	def prop_name(self, value):
-		self.name = value
 
 	@passhash.setter
 	def prop_passhash(self, value):

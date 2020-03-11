@@ -7,7 +7,8 @@ from Data_Provider.Handlers.query_handler import Query_Handler
 
 app = Flask(__name__)
 
-_queries = Query_Handler()
+#Instantiate handlers here
+#_queries = Query_Handler()
 
 @app.route('/',  methods=['GET'])
 def home():

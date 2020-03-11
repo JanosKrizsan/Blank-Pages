@@ -1,17 +1,10 @@
+from .model_base import ModelBase
 
-class Article(object):
+class Article(ModelBase):
 
 	def __init__(self):
 		pass
 	
-	@property
-	def prop_id(self):
-		return self.id
-
-	@property
-	def prop_title(self):
-		return self.title
-
 	@property
 	def prop_subtitle(self):
 		return self.subtitle
@@ -35,14 +28,6 @@ class Article(object):
 	@property
 	def prop_sources(self):
 		return self.sources
-
-	@id.setter
-	def prop_id(self, value):
-		id = value
-
-	@title.setter
-	def prop_title(self, value):
-		title = value
 
 	@subtitle.setter
 	def prop_subtitle(self, value):

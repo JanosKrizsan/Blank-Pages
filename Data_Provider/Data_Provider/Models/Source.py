@@ -1,15 +1,9 @@
-class Source(object):
+from .model_base import ModelBase
+
+class Source(ModelBase):
 
 	def __init__(self):
 		pass
-
-	@property
-	def prop_id(self):
-		return self.id
-
-	@property
-	def prop_name(self):
-		return self.name
 
 	@property
 	def prop_source_data(self):
@@ -18,14 +12,6 @@ class Source(object):
 	@property
 	def prop_parent_article(self):
 		return self.parent_artice
-
-	@id.setter
-	def prop_id(self, value):
-		self.id = value
-
-	@name.setter
-	def prop_name(self, value):
-		self.name = value
 
 	@source_data.setter
 	def prop_source_data(self, value):

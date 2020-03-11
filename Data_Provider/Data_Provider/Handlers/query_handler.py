@@ -1,4 +1,4 @@
-from Data_Provider.Handlers.connection_handler import Connection_Handler as conn
+from .connection_handler import Connection_Handler as conn
 import abc
 
 class Query_Handler(object, metaclass=abc.ABCMeta):

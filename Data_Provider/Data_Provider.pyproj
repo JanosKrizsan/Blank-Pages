@@ -29,19 +29,33 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Data_Provider\Handlers\author_handler.py" />
+    <Compile Include="Data_Provider\Handlers\article_handler.py" />
+    <Compile Include="Data_Provider\Handlers\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data_Provider\Handlers\source_handler.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data_Provider\Handlers\query_handler.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Data_Provider\Handlers\connection_handler.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data_Provider\Models\Article.py">
+    <Compile Include="Data_Provider\Models\article.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data_Provider\Models\Author.py">
+    <Compile Include="Data_Provider\Models\author.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data_Provider\Models\Source.py">
+    <Compile Include="Data_Provider\Models\model_base.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data_Provider\Models\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data_Provider\Models\source.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="runserver.py" />
