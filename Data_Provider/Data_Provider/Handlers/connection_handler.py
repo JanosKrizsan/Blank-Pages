@@ -8,10 +8,11 @@ from psycopg2 import sql
 class Connection_Handler(object):
 
 	@classmethod
-	def __init__(cls, user, password, db_name, address = None):
+	def __init__(cls, user, password, db_name, port = "5432", address = None):
 		cls.user_name = user
 		cls.host_add = "localhost" if address == None else address
 		cls.password = password
+		cls.port = port
 		cls.db = db_name
 		cls.conn_string = f"postgresql://{cls.user_name}:{cls.password}@{cls.host_add}/{cls.db}"
 		cls.file_path = cls.get_relative_path() + "\\blank_pages_db.sql"
@@ -20,7 +21,7 @@ class Connection_Handler(object):
 	def check_database_exists(cls):
 		cls.conn = None
 		try:
-			cls.conn = psycopg2.connect(host="localhost", user="postgres", password="postgres", port="5432")
+			cls.conn = psycopg2.connect(host=cls.host_add, user=cls.user_name, password=cls.password, port=cls.port)
 		except (Exception, psycopg2.DatabaseError) as error:
 			print("Unable to connect to database server.", error)
 		if cls.conn is not None:

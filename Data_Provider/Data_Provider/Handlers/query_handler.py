@@ -1,32 +1,66 @@
 from .connection_handler import Connection_Handler as conn
+from psycopg2 import sql
+import psycopg2
 import abc
 
 class Query_Handler(object, metaclass=abc.ABCMeta):
 
-	def __init__(self, name = "postgres", pwd = "postgres", db = "blank_pages_db"):
-		self.conn = conn(name, pwd, db)
-		self.conn.check_database_exists()
+	@classmethod
+	def __init__(cls, name = "postgres", pwd = "postgres", db = "blank_pages_db"):
+		cls.conn = conn(name, pwd, db)
 
-	@abc.abstractmethod
-	def GetData():
-		raise NotImplementedError("You must implement this method!")
+	@classmethod
+	def GetData(cls):
+		curs = cls.conn.cursor()
+		cursor.execute(
+        sql.SQL("select {col} from {table} ").
+            format(col=sql.Identifier(your_column),
+                   table=sql.Identifier('your_table')))
 
-	@abc.abstractmethod
-	def GetAllData():
-		raise NotImplementedError("You must implement this method!")
+	@classmethod
+	def GetAllData(cls):
+		curs = cls.conn.cursor()
+		cursor.execute(
+        sql.SQL("select {col} from {table} ").
+            format(col=sql.Identifier(your_column),
+                   table=sql.Identifier('your_table')))
 
-	@abc.abstractmethod
-	def UpdateData():
-		raise NotImplementedError("You must implement this method!")
+	@classmethod
+	def UpdateData(cls):
+		curs = cls.conn.cursor()
+		cursor.execute(
+        sql.SQL("select {col} from {table} ").
+            format(col=sql.Identifier(your_column),
+                   table=sql.Identifier('your_table')))
 
-	@abc.abstractmethod
-	def UpdateBulkData():
-		raise NotImplementedError("You must implement this method!")
+	@classmethod
+	def UpdateBulkData(cls):
+		curs = cls.conn.cursor()
+		cursor.execute(
+        sql.SQL("select {col} from {table} ").
+            format(col=sql.Identifier(your_column),
+                   table=sql.Identifier('your_table')))
 
-	@abc.abstractmethod
-	def DeleteData():
-		raise NotImplementedError("You must implement this method!")
+	@classmethod
+	def DeleteData(cls):
+		curs = cls.conn.cursor()
+		cursor.execute(
+        sql.SQL("select {col} from {table} ").
+            format(col=sql.Identifier(your_column),
+                   table=sql.Identifier('your_table')))
 
-	@abc.abstractmethod
-	def WipeData():
-		raise NotImplementedError("You must implement this method!")
+	@classmethod
+	def WipeData(cls):
+		curs = cls.conn.cursor()
+		cursor.execute(
+        sql.SQL("select {col} from {table} ").
+            format(col=sql.Identifier(your_column),
+                   table=sql.Identifier('your_table')))
+
+	@classmethod
+	def close_connections(cls):
+		cls.conn.close_connections()
+
+	@classmethod
+	def check_connection(cls):
+		cls.conn.check_database_exists()
