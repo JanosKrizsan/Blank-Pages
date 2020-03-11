@@ -7,27 +7,29 @@ from psycopg2 import sql
 
 class Connection_Handler(object):
 
-	def __init__(self, user, password, db_name, address = None):
-		self.user_name = user
-		self.host_add = "localhost" if address == None else address
-		self.password = password
-		self.db = db_name
-		self.conn_string = f"postgresql://{self.user_name}:{self.password}@{self.host_add}/{self.db}"
-		self.file_path = self.get_relative_path() + "\\blank_pages_db.sql"
+	@classmethod
+	def __init__(cls, user, password, db_name, address = None):
+		cls.user_name = user
+		cls.host_add = "localhost" if address == None else address
+		cls.password = password
+		cls.db = db_name
+		cls.conn_string = f"postgresql://{cls.user_name}:{cls.password}@{cls.host_add}/{cls.db}"
+		cls.file_path = cls.get_relative_path() + "\\blank_pages_db.sql"
 
-	def check_database_exists(self):
-		self.conn = None
+	@classmethod
+	def check_database_exists(cls):
+		cls.conn = None
 		try:
-			self.conn = psycopg2.connect(host="localhost", user="postgres", password="postgres", port="5432")
+			cls.conn = psycopg2.connect(host="localhost", user="postgres", password="postgres", port="5432")
 		except (Exception, psycopg2.DatabaseError) as error:
 			print("Unable to connect to database server.", error)
-		if self.conn is not None:
-			self.conn.autocommit = True
-			curs = self.conn.cursor()
+		if cls.conn is not None:
+			cls.conn.autocommit = True
+			curs = cls.conn.cursor()
 			curs.execute("SELECT datname FROM pg_database")
 			databases = curs.fetchall()
 			dbs = list(itertools.chain(*databases))
-			if self.db in dbs:
+			if cls.db in dbs:
 				#This always returns false in python, but true in PSQL
 				#TODO \\ ask about this
 				curs.execute(sql.SQL("""
@@ -37,44 +39,45 @@ class Connection_Handler(object):
 						WHERE  n.nspname = '{datbase}'
 						AND    c.relname = 'authors'
 						);
-				""").format(datbase = sql.Identifier(self.db)))
+				""").format(datbase = sql.Identifier(cls.db)))
 				exists = curs.fetchone()[0]
 				#if exists == False:
 				#	self.read_sql_from_file()
 			else:
-				self.create_database(self.db)
+				cls.create_database(cls.db)
 		else:
 			print("PSQL Database Provider could not be reached.")
 
-
-	def connect_to_db(self):
+	@classmethod
+	def connect_to_db(cls):
 		try:
-			con = psycopg2.connect(self.conn_string)
+			con = psycopg2.connect(cls.conn_string)
 			con.autocommit = True
 		except (Exception, psycopg2.DatabaseError) as error:
 			print("Database does not exist, or another error occurred:", error)
 		return con
 
+	@classmethod
+	def create_database(cls, db_name = None):
+		name = cls.db if db_name == None else db_name
+		cls.conn = psycopg2.connect(host="localhost", user="postgres", password="postgres", port="5432")
+		cls.conn.autocommit = True
+		cls.conn.cursor().execute(sql.SQL("CREATE DATABASE {}").format(sql.Identifier(name)))
+		cls.close_connections()
 
-	def create_database(self, db_name = None):
-		name = self.db if db_name == None else db_name
-		self.conn = psycopg2.connect(host="localhost", user="postgres", password="postgres", port="5432")
-		self.conn.autocommit = True
-		self.conn.cursor().execute(sql.SQL("CREATE DATABASE {}").format(sql.Identifier(name)))
-		self.close_connections()
+	@classmethod
+	def close_connections(cls):
+		cls.conn.cursor().close()
+		cls.conn.close()
 
+	@classmethod
+	def read_sql_from_file(cls):
+		conn = cls.connect_to_db()
+		conn.cursor().execute(open(cls.file_path, 'r').read())
+		cls.close_connections()
 
-	def close_connections(self):
-		self.conn.cursor().close()
-		self.conn.close()
-
-
-	def read_sql_from_file(self):
-		conn = self.connect_to_db()
-		conn.cursor().execute(open(self.file_path, 'r').read())
-		self.close_connections()
-
-	def get_relative_path(self):
+	@staticmethod
+	def get_relative_path():
 		base = None
 		dirs =[dir for dir in os.listdir(os.path.abspath(os.getcwd())) if os.path.isdir(dir)]
 		for d in dirs:
@@ -85,7 +88,7 @@ class Connection_Handler(object):
 			raise FileNotFoundError("The file or 'static' folder could not be found.")
 		return base
 
-
+	@staticmethod
 	def conn_handler(function):
 		def wrapper(*args, **kwargs):
 			self.conn = self.connect_to_db()
