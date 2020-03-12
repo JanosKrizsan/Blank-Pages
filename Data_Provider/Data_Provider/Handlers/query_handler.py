@@ -6,7 +6,7 @@ import abc
 class Query_Handler(object, metaclass=abc.ABCMeta):
 
 	@classmethod
-	def __init__(cls, name = "postgres", pwd = "postgres", db = "blank_pages_db"):
+	def __init__(cls, name, pwd, db):
 		cls.name = name
 		cls.pwd = pwd
 		cls.db = db
@@ -53,7 +53,7 @@ class Query_Handler(object, metaclass=abc.ABCMeta):
 		curs = cls.conn.cursor()
 		curs.execute(sql.SQL("""
 			INSERT INTO {table} ({columns})
-			VALUES ({values})
+			VALUES ({values});
 		""").format(table=sql.Identifier(table_),
 					columns=sql.Identifier(columns_),
 					values=sql.Identifier(values_)))

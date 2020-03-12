@@ -29,26 +29,26 @@ class Article(ModelBase):
 	def prop_sources(self):
 		return self.sources
 
-	@subtitle.setter
+	@prop_subtitle.setter
 	def prop_subtitle(self, value):
 		subtitle = value
 
-	@content.setter
+	@prop_content.setter
 	def prop_content(self, value):
 		content = value
 
-	@fullfilepath.setter
+	@prop_fullfilepath.setter
 	def prop_fullfilepath(self, value):
 		self.fullfilepath = value
 
-	@author.setter
+	@prop_author.setter
 	def prop_author(self, value):
 		self.author = value
 
-	@creationdate.setter
+	@prop_creationdate.setter
 	def prop_creationdate(self, value):
 		self.creationdate = value
 
-	@sources.setter
+	@prop_sources.setter
 	def prop_sources(self, value):
 		self.sources = value

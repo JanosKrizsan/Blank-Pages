@@ -58,6 +58,12 @@
     <Compile Include="Data_Provider\Models\source.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Data_Provider\Static\creds.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data_Provider\Static\utils.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="runserver.py" />
     <Compile Include="Data_Provider\data_main.py" />
   </ItemGroup>

@@ -13,10 +13,10 @@ class Source(ModelBase):
 	def prop_parent_article(self):
 		return self.parent_artice
 
-	@source_data.setter
+	@prop_source_data.setter
 	def prop_source_data(self, value):
 		self.source_data = value
 
-	@parent_artice.setter
+	@prop_parent_article.setter
 	def prop_parent_article(self ,value):
 		self.parent_article = value

@@ -12,11 +12,11 @@ class ModelBase(object, metaclass=abc.ABCMeta):
 	def prop_name(self):
 		return self.name
 
-	@id.setter
+	@prop_id.setter
 	def prop_id(self, value):
 		self.__id_setter__(value)
 
-	@name.setter
+	@prop_name.setter
 	def prop_name(self, value):
 		self.__name_setter__(value)
 

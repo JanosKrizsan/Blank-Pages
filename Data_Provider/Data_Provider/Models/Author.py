@@ -13,10 +13,10 @@ class Author(ModelBase):
 	def prop_articles_written(self):
 		return self.articles_written
 
-	@passhash.setter
+	@prop_passhash.setter
 	def prop_passhash(self, value):
 		self.passhash = value
 
-	@articles_written.setter
+	@prop_articles_written.setter
 	def prop_articles_written(self, value):
 		self.articles_written = value
