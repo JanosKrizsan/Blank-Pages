@@ -2,7 +2,7 @@
 Routes and views for the flask application.
 """
 
-from flask import Flask, request
+from flask import Flask, Response, Request
 from Data_Provider.Handlers import article_handler, author_handler, source_handler
 from Data_Provider.Static.creds import psql_creds
 
@@ -17,20 +17,25 @@ sources = source_handler.Source_Handler(creds[0], creds[1], creds[2])
 
 @app.route('/',  methods=['GET'])
 def home():
-    return "Server Online"
+    if authors.check_connection():
+        return authors.get_all_data()
+    return Response(ConnectionError())
 
 @app.route('/request', methods=['GET'])
 def get_request():
-    pass
+    return "Request"
 
 @app.route('/send', methods=['POST'])
 def post_request():
-    pass
+    return "Send"
+
 
 @app.route('/update', methods=['PUT'])
 def put_request():
-    pass
+    return "Update"
+
 
 @app.route('/delete', methods=['DELETE'])
 def delete_request():
-    pass
+    return "Delete"
+

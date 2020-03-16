@@ -7,27 +7,27 @@ class Article_Handler(Queries):
 	def __init__(self, name, pwd, db):
 		super().__init__(name, pwd, db)
 
-	def GetData(search_column, phrase):
+	def get_data(self, search_column, phrase):
 		fields = "title, sub_title, full_file_path, author_id, creation_date"
-		data = super().GetData(fields, "articles", search_column, phrase)
+		data = super().get_data(fields, "articles", search_column, phrase)
 		return create_article(data)
 
-	def GetAllData():
-		datas = super().GetAllData("articles")
+	def get_all_data(self):
+		datas = super().get_all_data("articles")
 		articles = []
 		for dat in datas:
 			articles.append(create_article(dat))
 		return articles
 
-	def UpdateData(values, search_column, phrase):
-		super().UpdateData("articles", create_val_string(values), search_column, phrase)
+	def update_data(self, values, search_column, phrase):
+		super().update_data("articles", create_val_string(values), search_column, phrase)
 
-	def AddData(values):
+	def add_data(self, values):
 		columns = "title, sub_title, full_file_path, author_id, creation_date"
-		super().AddData("articles", columns, values)
+		super().add_data("articles", columns, values)
 
-	def DeleteData(search_column, phrase):
-		super().DeleteData("articles", search_column, phrase)
+	def delete_data(self, search_column, phrase):
+		super().delete_data("articles", search_column, phrase)
 
-	def WipeData():
-		super().WipeData("articles")
+	def wipe_data(self):
+		super().wipe_data("articles")

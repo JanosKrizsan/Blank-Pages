@@ -7,26 +7,26 @@ class Source_Handler(Queries):
 	def __init__(self, name, pwd, db):
 		super().__init__(name, pwd, db)
 	
-	def GetData(search_column, phrase):
+	def get_data(self, search_column, phrase):
 		fields = "name, source_data, parent_article_id"
-		data = super().GetData(fields, "sources", search_column, phrase)
+		data = super().get_data(fields, "sources", search_column, phrase)
 		return create_source(data)
 
-	def GetAllData():
-		datas = super().GetAllData("sources")
+	def get_all_data(self):
+		datas = super().get_all_data("sources")
 		sources = []
 		for dat in datas:
 			sources.append(create_source(dat))
 		return sources
 
-	def UpdateData(values, search_column, phrase):
-		super().UpdateData("sources", create_val_string(values), search_column, phrase)
+	def update_data(self, values, search_column, phrase):
+		super().update_data("sources", create_val_string(values), search_column, phrase)
 
-	def AddData(values):
-		super().AddData("sources", "name, source_data, parent_article_id", values)
+	def add_data(self, values):
+		super().add_data("sources", "name, source_data, parent_article_id", values)
 
-	def DeleteData(search_column, phrase):
-		super().DeleteData("sources", search_column, phrase)
+	def delete_data(self, search_column, phrase):
+		super().delete_data("sources", search_column, phrase)
 
-	def WipeData():
-		super().WipeData("sources")
+	def wipe_data(self):
+		super().wipe_data("sources")

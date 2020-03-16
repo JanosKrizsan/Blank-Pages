@@ -89,14 +89,5 @@ class Connection_Handler(object):
 			raise FileNotFoundError("The file or 'static' folder could not be found.")
 		return base
 
-	@staticmethod
-	def conn_handler(function):
-		def wrapper(*args, **kwargs):
-			self.conn = self.connect_to_db()
-			dict_cur = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-			ret_value = function(dict_cur, *args, **kwargs)
-			dict_cur.close()
-			self.conn.close()
-			return ret_value
-		return wrapper
+
 

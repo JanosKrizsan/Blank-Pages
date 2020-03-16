@@ -7,26 +7,30 @@ class Author_Handler(Queries):
 	def __init__(self, name, pwd, db):
 		super().__init__(name, pwd, db)
 
-	def GetData(phrase):
+	def get_data(self, phrase):
 		fields = "id, name, password"
-		data = super().GetData(fields, "authors", "name", phrase)
+		data = super().get_data(fields, "authors", "name", phrase)
 		return create_author(data)
 
-	def GetAllData():
-		data = super().GetAllData("authors")
+	def get_all_data(self):
+		data = super().get_all_data("authors")
 		authors = []
 		for dat in datas:
 			articles.append(create_author(dat))
 		return authors
 
-	def UpdateData(values, search_column, phrase):
-		super().UpdateData("authors", create_val_string(values), search_column, phrase)
+	def update_data(values, search_column, phrase):
+		super().update_data("authors", create_val_string(values), search_column, phrase)
 
-	def AddData(values):
-		super().AddData("authors", "name, password", values)
+	def add_data(self, values):
+		super().add_data("authors", "name, password", values)
 
-	def DeleteData(phrase):
-		super().DeleteData("authors", "name", phrase)
+	def delete_data(self, phrase):
+		super().delete_data("authors", "name", phrase)
 
-	def WipeData():
-		super().WipeData("authors")
+	def wipe_data(self):
+		super().wipe_data("authors")
+
+	def check_connection(self):
+		super().check_connection()
+		return True
