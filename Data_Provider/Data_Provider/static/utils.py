@@ -17,7 +17,7 @@ def create_val_string(values):
 
 
 def set_attributes(obj, data):
-	for k, v in data.iteritems():
+	for k, v in data.items():
 		setattr(obj, k, v)
 	return obj
 

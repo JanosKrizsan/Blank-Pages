@@ -18,7 +18,7 @@ sources = source_handler.Source_Handler(creds[0], creds[1], creds[2])
 @app.route('/',  methods=['GET'])
 def home():
     if authors.check_connection():
-        return authors.get_all_data()
+        return str(authors.get_all_data())
     return Response(ConnectionError())
 
 @app.route('/request', methods=['GET'])

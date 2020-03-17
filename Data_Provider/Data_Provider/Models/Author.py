@@ -6,16 +6,16 @@ class Author(ModelBase):
 		pass
 
 	@property
-	def prop_passhash(self):
-		return self.passhash
+	def prop_password(self):
+		return self.password
 
 	@property
 	def prop_articles_written(self):
 		return self.articles_written
 
-	@prop_passhash.setter
-	def prop_passhash(self, value):
-		self.passhash = value
+	@prop_password.setter
+	def prop_password(self, value):
+		self.password = value
 
 	@prop_articles_written.setter
 	def prop_articles_written(self, value):

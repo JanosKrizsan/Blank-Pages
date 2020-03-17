@@ -10,7 +10,7 @@ CREATE TABLE Authors (
 
 CREATE TABLE Articles (
 	id SERIAL PRIMARY KEY,
-	title VARCHAR(40) NOT NULL,
+	name VARCHAR(40) NOT NULL,
 	sub_title VARCHAR(40),
 	full_file_path VARCHAR(255),
 	author_id int NOT NULL,

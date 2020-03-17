@@ -13,13 +13,13 @@ class Author_Handler(Queries):
 		return create_author(data)
 
 	def get_all_data(self):
-		data = super().get_all_data("authors")
+		datas = super().get_all_data("authors")
 		authors = []
 		for dat in datas:
-			articles.append(create_author(dat))
+			authors.append(create_author(dat))
 		return authors
 
-	def update_data(values, search_column, phrase):
+	def update_data(self, values, search_column, phrase):
 		super().update_data("authors", create_val_string(values), search_column, phrase)
 
 	def add_data(self, values):

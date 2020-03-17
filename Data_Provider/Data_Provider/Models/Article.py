@@ -6,48 +6,48 @@ class Article(ModelBase):
 		pass
 	
 	@property
-	def prop_subtitle(self):
-		return self.subtitle
+	def prop_sub_title(self):
+		return self.sub_title
 
 	@property
 	def prop_content(self):
 		return self.content
 
 	@property
-	def prop_fullfilepath(self):
-		return self.fullfilepath
+	def prop_full_file_path(self):
+		return self.full_file_path
 
 	@property
-	def prop_author(self):
-		return self.author
+	def prop_author_id(self):
+		return self.author_id
 
 	@property
-	def prop_creationdate(self):
-		return self.creationdate
+	def prop_creation_date(self):
+		return self.creation_date
 
 	@property
 	def prop_sources(self):
 		return self.sources
 
-	@prop_subtitle.setter
-	def prop_subtitle(self, value):
-		subtitle = value
+	@prop_sub_title.setter
+	def prop_sub_title(self, value):
+		self.sub_title = value
 
 	@prop_content.setter
 	def prop_content(self, value):
-		content = value
+		self.content = value
 
-	@prop_fullfilepath.setter
-	def prop_fullfilepath(self, value):
-		self.fullfilepath = value
+	@prop_full_file_path.setter
+	def prop_full_file_path(self, value):
+		self.full_file_path = value
 
-	@prop_author.setter
-	def prop_author(self, value):
-		self.author = value
+	@prop_author_id.setter
+	def prop_author_id(self, value):
+		self.author_id = value
 
-	@prop_creationdate.setter
-	def prop_creationdate(self, value):
-		self.creationdate = value
+	@prop_creation_date.setter
+	def prop_creation_date(self, value):
+		self.creation_date = value
 
 	@prop_sources.setter
 	def prop_sources(self, value):
