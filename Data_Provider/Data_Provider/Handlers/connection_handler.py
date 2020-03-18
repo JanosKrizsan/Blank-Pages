@@ -4,6 +4,7 @@ import itertools
 import io
 import os
 from psycopg2 import sql
+from Data_Provider.Static.creds import get_file_path
 
 class Connection_Details(object):
    
@@ -15,20 +16,8 @@ class Connection_Details(object):
 		self.port = env["psql_port"] = port
 		self.db = env["psql_db"] = db_name
 		self.conn_string = env["psql_conn_string"] = f"postgresql://{self.user_name}:{self.pwd}@{self.add}/{self.db}"
-		self.file_path = env["psql_file_path"] = self.get_file_path() + "\\blank_pages_db.sql"
+		self.file_path = env["psql_file_path"] = get_file_path() + "\\blank_pages_db.sql"
 	
-	@staticmethod
-	def get_file_path():
-		base = None
-		dirs =[dir for dir in os.listdir(os.path.abspath(os.getcwd())) if os.path.isdir(dir)]
-		for dir in dirs:
-			if "Static" in os.listdir(dir):
-				base = os.path.abspath(dir) + "\Static"
-				break
-		if base == None:
-			raise FileNotFoundError("The file or 'static' folder could not be found.")
-		return base
-
 def conn_creator(func):
 	def wrapper(*args, **kwargs):
 		conn = connect_to_db()

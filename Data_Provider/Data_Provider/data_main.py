@@ -2,26 +2,15 @@
 Routes and views for the flask application.
 """
 
+from Data_Provider.Handlers.communication_handler import get_req_handler, post_req_handler, put_req_handler, del_req_handler
 from flask import Flask
-from Data_Provider.Handlers import article_handler, author_handler, source_handler
-from Data_Provider.Static.creds import psql_creds
-from Data_Provider.Static.utils import response_creator
 import requests
 
 app = Flask(__name__)
 
-creds = psql_creds()
-
-authors = author_handler.Author_Handler(creds[0], creds[1], creds[2])
-articles = article_handler.Article_Handler(creds[0], creds[1], creds[2])
-sources = source_handler.Source_Handler(creds[0], creds[1], creds[2])
-
-
 @app.route('/',  methods=['GET'])
 def home():
-    if authors.check_connection():
-        return response_creator()
-    return response_creator()
+    return "OK"
 
 @app.route('/request/<data>', methods=['GET'])
 def get_request(data):

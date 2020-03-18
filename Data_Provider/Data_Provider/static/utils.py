@@ -1,70 +1,9 @@
 from Data_Provider.Models.author import Author
 from Data_Provider.Models.article import Article
 from Data_Provider.Models.source import Source
-from flask import jsonify, json, make_response
-from Data_Provider.Handlers import article_handler, author_handler, source_handler
-from Data_Provider.Static.creds import psql_creds
 import datetime
 import xml.etree.ElementTree as et
 import io
-
-authors = author_handler.Author_Handler(creds[0], creds[1], creds[2])
-articles = article_handler.Article_Handler(creds[0], creds[1], creds[2])
-sources = source_handler.Source_Handler(creds[0], creds[1], creds[2])
-
-def response_creator(stat_code, resp_string, obj = None):
-	pass
-
-def get_req_handler(table, mass_dat, phrase, search_col ):
-	auth = authors.get_all_data if mass_dat else authors.get_data
-	arti = articles.get_all_data if mass_dat else articles.get_data
-	sour = sources.get_all_data if mass_dat else sources.get_data
-	switcher = {
-		'au' : auth,
-		'ar' : arti,
-		'sr' : sour
-		}
-	func = switcher.get(table, None)
-	if func != None:
-		if mass_dat:
-			return func()
-		else:
-			return func(search_col, phrase)
-	else:
-		return AttributeError("Invalid Data Provided")
-
-def post_req_handler(table, vals):
-	func = authors.add_data if table == 'au' else articles.add_data if table == 'ar' else sources.add_data if table == 'sr' else None
-	if func == None:
-		return AttributeError("Invalid Data Provided")
-	func(vals)
-	return True
-
-def put_req_handler(table, vals, col, phrase,):
-	func = authors.update_data if table == 'au' else articles.update_data if table == 'ar' else sources.update_data if table == 'sr' else None
-	if func == None:
-		return AttributeError("Invalid Data Provided")
-	func(vals, col, phrase)
-	return True
-
-def del_req_handler(table, mass_dat, phrase):
-	auth = authors.wipe_data if mass_dat else authors.delete_data
-	arti = articles.wipe_data if mass_dat else articles.delete_data
-	sour = sources.wipe_data if mass_dat else sources.delete_data
-	switcher = {
-		'au' : auth,
-		'ar' : arti,
-		'sr' : sour
-		}
-	func = switcher.get(table, None)
-	if func != None:
-		if mass_dat:
-			func()
-		else:
-			func(phrase)
-			return True
-	else:
-		return AttributeError("Invalid Data Provided")
 
 def create_val_string(values):
 	string_vals = []

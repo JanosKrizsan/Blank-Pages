@@ -31,6 +31,9 @@
   <ItemGroup>
     <Compile Include="Data_Provider\Handlers\author_handler.py" />
     <Compile Include="Data_Provider\Handlers\article_handler.py" />
+    <Compile Include="Data_Provider\Handlers\communication_handler.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data_Provider\Handlers\__init__.py">
       <SubType>Code</SubType>
     </Compile>
