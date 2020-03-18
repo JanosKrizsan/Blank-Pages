@@ -2,9 +2,11 @@
 Routes and views for the flask application.
 """
 
-from flask import Flask, Response, Request
+from flask import Flask
 from Data_Provider.Handlers import article_handler, author_handler, source_handler
 from Data_Provider.Static.creds import psql_creds
+from Data_Provider.Static.utils import response_creator
+import requests
 
 app = Flask(__name__)
 
@@ -18,11 +20,13 @@ sources = source_handler.Source_Handler(creds[0], creds[1], creds[2])
 @app.route('/',  methods=['GET'])
 def home():
     if authors.check_connection():
-        return str(authors.get_all_data())
-    return Response(ConnectionError())
+        return response_creator()
+    return response_creator()
 
-@app.route('/request', methods=['GET'])
-def get_request():
+@app.route('/request/<data>', methods=['GET'])
+def get_request(data):
+    
+
     return "Request"
 
 @app.route('/send', methods=['POST'])
@@ -38,4 +42,3 @@ def put_request():
 @app.route('/delete', methods=['DELETE'])
 def delete_request():
     return "Delete"
-

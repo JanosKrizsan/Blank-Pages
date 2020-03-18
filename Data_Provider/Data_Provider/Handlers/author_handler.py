@@ -7,9 +7,9 @@ class Author_Handler(Queries):
 	def __init__(self, name, pwd, db):
 		super().__init__(name, pwd, db)
 
-	def get_data(self, phrase):
-		fields = "id, name, password"
-		data = super().get_data(fields, "authors", "name", phrase)
+	def get_data(self, search_column, phrase):
+		fields = "id, name"
+		data = super().get_data(fields, "authors", search_column, phrase)
 		return create_author(data)
 
 	def get_all_data(self):

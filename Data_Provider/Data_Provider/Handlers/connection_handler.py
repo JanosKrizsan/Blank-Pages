@@ -47,7 +47,7 @@ def check_database_exists(info):
 	except (Exception, psycopg2.DatabaseError) as error:
 		print("Unable to connect to database server.", error)
 	if conn is not None:
-		conn.autocommit = True¨
+		conn.autocommit = True
 		curs = conn.cursor()
 		curs.execute("SELECT datname FROM pg_database")
 		databases = curs.fetchall()
@@ -55,17 +55,10 @@ def check_database_exists(info):
 		if info.db in dbs:
 			#This always returns false in python, but true in PSQL
 			#TODO \\ ask about this
-			curs.execute(sql.SQL("""
-				SELECT EXISTS (
-					SELECT FROM pg_catalog.pg_class c
-					JOIN   pg_catalog.pg_namespace n ON n.oid = c.relnamespace
-					WHERE  n.nspname = '{datbase}'
-					AND    c.relname = 'authors'
-					);
-			""").format(datbase = sql.Identifier(info.db)))
+			curs.execute(sql.SQL("SELECT EXISTS (SELECT to_regclass('{datbase}.authors'));").format(datbase = sql.Identifier(info.db)))
 			exists = curs.fetchone()[0]
-			#if exists == False:
-			#	read_sql_from_file()
+			if exists == False:
+				read_sql_from_file()
 		else:
 			create_database(info.db)
 	else:
