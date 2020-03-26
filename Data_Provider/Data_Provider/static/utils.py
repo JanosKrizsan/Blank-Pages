@@ -1,3 +1,7 @@
+"""
+Object instantiation, saving/ reading articles to and fro' XML files.
+"""
+
 from Data_Provider.Models.author import Author
 from Data_Provider.Models.article import Article
 from Data_Provider.Models.source import Source

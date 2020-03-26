@@ -1,3 +1,6 @@
+"""
+Handles article related queries.
+"""
 from .query_handler import Query_Handler as Queries
 from Data_Provider.Models.article import Article as arty
 from Data_Provider.Static.utils import create_val_string, create_article, serialize_to_file, read_from_file

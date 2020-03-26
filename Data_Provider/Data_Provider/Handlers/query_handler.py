@@ -1,3 +1,6 @@
+"""
+Handles, or provides generic queries which are called by sub-handlers for the specific tables.
+"""
 from .connection_handler import Connection_Details as details, connect_to_db, conn_creator, check_database_exists
 from psycopg2 import sql
 import psycopg2
@@ -35,7 +38,7 @@ class Query_Handler(object):
         sql.SQL("""
 			UPDATE {table}
 			SET {values}
-			WHERE {search_column} = {id};
+			WHERE {search_column} = '{id}';
 		""").
             format(table=sql.Identifier(table_),
                    values=sql.Identifier(values_),
@@ -50,6 +53,7 @@ class Query_Handler(object):
 		""").format(table=sql.Identifier(table_),
 					columns=sql.Identifier(columns_),
 					values=sql.Identifier(values_)))
+
 	@conn_creator
 	def delete_data(cursor, table_, search_column_, id_):
 		cursor.execute(
@@ -57,6 +61,7 @@ class Query_Handler(object):
             format(table=sql.Identifier(table_),
 				   search_column=sql.Identifier(search_column_),
                    id=sql.Identifier(id_)))
+
 	@conn_creator
 	def wipe_data(cursor, table_):
 		cursor.execute(

@@ -1,3 +1,6 @@
+"""
+Handles PSQL database connection via psycopg2.
+"""
 import psycopg2
 import psycopg2.extras
 import itertools
@@ -42,8 +45,6 @@ def check_database_exists(info):
 		databases = curs.fetchall()
 		dbs = list(itertools.chain(*databases))
 		if info.db in dbs:
-			#This always returns false in python, but true in PSQL
-			#TODO \\ ask about this
 			curs.execute(sql.SQL("SELECT EXISTS (SELECT to_regclass('{datbase}.authors'));").format(datbase = sql.Identifier(info.db)))
 			exists = curs.fetchone()[0]
 			if exists == False:
@@ -74,7 +75,7 @@ def close_connections(conn):
 
 def read_sql_from_file():
 	conn = connect_to_db()
-	conn.cursor().execute(open(os.environ["psql_file_path"], 'r').read())
+	conn.cursor().execute(open(os.environ["psql_file_path"], "r").read())
 	close_connections(conn)
 
 

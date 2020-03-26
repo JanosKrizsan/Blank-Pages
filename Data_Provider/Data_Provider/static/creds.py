@@ -1,4 +1,9 @@
+"""
+Saving and retrieving credentials from a .ini file.
+"""
+
 import configparser
+import stdiomask
 import io
 import os
 
@@ -11,16 +16,16 @@ def psql_creds():
 
 def get_cred_inputs():
 	name = input("Provide the user name :")
-	pwd = input("Provide the password :")
+	pwd = stdiomask.getpass("Provide the password :", "#")
 	db = input("Provide the database name :")
 	return [name, pwd, db]
 
 def save_creds_to_ini():
 	details = get_cred_inputs()
 	config = configparser.ConfigParser()
-	config['creds'] = {'name' : f'{details[0]}',
-					'pwd' : f'{details[1]}',
-					'db' : f'{details[2]}'}
+	config["creds"] = {"name" : f"{details[0]}",
+					"pwd" : f"{details[1]}",
+					"db" : f"{details[2]}"}
 	path = get_file_path() + "\\settings.ini"
 	operation = "x"
 	if os.path.exists(path):
@@ -31,9 +36,9 @@ def save_creds_to_ini():
 def read_creds_from_ini():
 	config = configparser.ConfigParser()
 	config.read(get_file_path() + "\\settings.ini")
-	if config.has_section('creds'):
+	if config.has_section("creds"):
 		creds = []
-		for v in config['creds'].values():
+		for v in config["creds"].values():
 			creds.append(v)
 		return creds
 	return None

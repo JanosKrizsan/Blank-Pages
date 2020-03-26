@@ -1,3 +1,6 @@
+"""
+Handles source related queries.
+"""
 from .query_handler import Query_Handler as Queries
 from Data_Provider.Models.source import Source as src
 from Data_Provider.Static.utils import create_val_string, create_source
