@@ -2,6 +2,8 @@
 Created exceptions, most likely they will not be used.
 """
 
+from Data_Provider.Models.statuses import get_status
+
 class Error(Exception):
 	
 	def __init__(self, *args):
@@ -13,6 +15,7 @@ class Error(Exception):
 class Accepted(Error):
 
 	def __init__(self, *args):
+		self.err_code = 202
 		return super().__init__(*args)
 
 	def __str__(self):
@@ -21,6 +24,7 @@ class Accepted(Error):
 class No_Content(Error):
 
 	def __init__(self, *args):
+		self.err_code = 204
 		return super().__init__(*args)
 
 	def __str__(self):
@@ -29,6 +33,7 @@ class No_Content(Error):
 class Bad_Request(Error):
 
 	def __init__(self, *args):
+		self.err_code = 400
 		return super().__init__(*args)
 
 	def __str__(self):
@@ -37,6 +42,7 @@ class Bad_Request(Error):
 class Unauthorized(Error):
 
 	def __init__(self, *args):
+		self.err_code = 401
 		return super().__init__(*args)
 
 	def __str__(self):
@@ -45,6 +51,7 @@ class Unauthorized(Error):
 class Forbidden(Error):
 
 	def __init__(self, *args):
+		self.err_code = 403
 		return super().__init__(*args)
 
 	def __str__(self):
@@ -53,6 +60,7 @@ class Forbidden(Error):
 class Not_Found(Error):
 
 	def __init__(self, *args):
+		self.err_code = 404
 		return super().__init__(*args)
 
 	def __str__(self):
@@ -61,6 +69,7 @@ class Not_Found(Error):
 class Conflict(Error):
 
 	def __init__(self, *args):
+		self.err_code = 409
 		return super().__init__(*args)
 
 	def __str__(self):
@@ -69,6 +78,7 @@ class Conflict(Error):
 class I_Am_A_Hal(Error):
 
 	def __init__(self, *args):
+		self.err_code = 418
 		return super().__init__(*args)
 
 	def __str__(self):
@@ -77,6 +87,7 @@ class I_Am_A_Hal(Error):
 class Internal_Error(Error):
 
 	def __init__(self, *args):
+		self.err_code = 500
 		return super().__init__(*args)
 
 	def __str__(self):
@@ -85,6 +96,7 @@ class Internal_Error(Error):
 class Not_Implemented(Error):
 
 	def __init__(self, *args):
+		self.err_code = 501
 		return super().__init__(*args)
 
 	def __str__(self):
@@ -93,6 +105,7 @@ class Not_Implemented(Error):
 class Service_Unavailable(Error):
 
 	def __init__(self, *args):
+		self.err_code = 503
 		return super().__init__(*args)
 
 	def __str__(self):

@@ -52,7 +52,13 @@
     <Compile Include="Data_Provider\Models\author.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Data_Provider\Models\exceptions.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data_Provider\Models\model_base.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data_Provider\Models\statuses.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Data_Provider\Models\__init__.py">

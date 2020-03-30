@@ -8,6 +8,7 @@ import io
 import os
 from psycopg2 import sql
 from Data_Provider.Static.creds import get_file_path
+import Data_Provider.Models.exceptions as exc
 
 class Connection_Details(object):
    
@@ -36,8 +37,8 @@ def check_database_exists(info):
 	conn = None
 	try:
 		conn = psycopg2.connect(host=info.add, user=info.user_name, password=info.pwd, port=info.port)
-	except (Exception, psycopg2.DatabaseError) as error:
-		print("Unable to connect to database server.", error)
+	except (Exception, psycopg2.DatabaseError) as e:
+		raise exc.Service_Unavailable("Unable to connect to database server.", e)
 	if conn is not None:
 		conn.autocommit = True
 		curs = conn.cursor()
@@ -52,14 +53,14 @@ def check_database_exists(info):
 		else:
 			create_database(info.db)
 	else:
-		print("PSQL Database Provider could not be reached.")
+		raise exc.Internal_Error("Database Provider could not be reached.")
 
 def connect_to_db():
 	try:
 		conn = psycopg2.connect(os.environ["psql_conn_string"])
 		conn.autocommit = True
-	except (Exception, psycopg2.DatabaseError) as error:
-		print("Database does not exist, or another error occurred:", error)
+	except (Exception, psycopg2.DatabaseError) as e:
+		raise exc.Service_Unavailable("Unable to connect to the database server.", e)
 	return conn
 
 def create_database(db_name = None):

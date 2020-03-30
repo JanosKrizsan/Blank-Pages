@@ -5,6 +5,7 @@ Handles requests and responses.
 from Data_Provider.Handlers import article_handler, author_handler, source_handler
 from Data_Provider.Static.creds import psql_creds
 from Data_Provider.Models.statuses import get_status
+import Data_Provider.Models.exceptions as exc
 from flask import json, Response
 
 creds = psql_creds()
@@ -22,56 +23,59 @@ def create_response(stat_code, obj = None):
 		)
 
 def create_error_response(stat_code):
-	error_data = ("Error_Message" : get_status(stat_code))
+	error_data = {"Error_Message" : get_status(stat_code)}
 	return create_response(stat_code, error_data)
 
-def get_req_handler(table, mass_dat, phrase, search_col ):
+def get_req_handler(table, phrase, search_col, mass_dat):
+	tbl = table[0:2]
 	auth = authors.get_all_data if mass_dat else authors.get_data
 	arti = articles.get_all_data if mass_dat else articles.get_data
 	sour = sources.get_all_data if mass_dat else sources.get_data
 	switcher = {
 		"au" : auth,
 		"ar" : arti,
-		"sr" : sour
+		"so" : sour
 		}
-	func = switcher.get(table, None)
+	func = switcher.get(tbl, None)
 	if func != None:
 		if mass_dat:
-			return func()
+			dat = func()
 		else:
-			return func(search_col, phrase)
+			dat = func(search_col, phrase)
+		return dat;
 	else:
-		return AttributeError("Invalid Data Provided")
+		raise exc.Accepted("Invalid Data Provided")
 
 def post_req_handler(table, vals):
-	func = authors.add_data if table == "au" else articles.add_data if table == "ar" else sources.add_data if table == "sr" else None
+	func = authors.add_data if "au" in table else articles.add_data if "ar" in table else sources.add_data if "so" in table else None
 	if func == None:
-		return AttributeError("Invalid Data Provided")
+		raise exc.Accepted("Invalid Data Provided")
 	func(vals)
 	return True
 
 def put_req_handler(table, vals, col, phrase,):
-	func = authors.update_data if table == "au" else articles.update_data if table == "ar" else sources.update_data if table == "sr" else None
+	func = authors.update_data if "au" in table else articles.update_data if "ar" in table else sources.update_data if "so" in table else None
 	if func == None:
-		return AttributeError("Invalid Data Provided")
+		raise exc.Accepted("Invalid Data Provided")
 	func(vals, col, phrase)
 	return True
 
-def del_req_handler(table, mass_dat, phrase):
+def del_req_handler(table, phrase, mass_dat):
+	tbl = table[0:2]
 	auth = authors.wipe_data if mass_dat else authors.delete_data
 	arti = articles.wipe_data if mass_dat else articles.delete_data
 	sour = sources.wipe_data if mass_dat else sources.delete_data
 	switcher = {
 		"au" : auth,
 		"ar" : arti,
-		"sr" : sour
+		"so" : sour
 		}
-	func = switcher.get(table, None)
+	func = switcher.get(tbl, None)
 	if func != None:
 		if mass_dat:
 			func()
 		else:
 			func(phrase)
-			return True
+		return True
 	else:
-		return AttributeError("Invalid Data Provided")
+		raise exc.Accepted("Invalid Data Provided")

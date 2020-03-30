@@ -3,6 +3,7 @@ Routes of the app defined here.
 """
 
 import Data_Provider.Handlers.communication_handler as comm
+import Data_Provider.Models.exceptions as exc
 from flask import Flask
 import requests
 
@@ -14,16 +15,41 @@ def home():
         app.handle_exception(400)
     return "OK"
 
-@app.route("/request/<data>", methods=["GET"])
-def get_request(data):
-    if request.method != "GET":
+@app.route("/request/<table>/<string:seach>/<data>", methods=["GET"])
+@app.route("/request/<table>/<string:search>")
+@app.route("/request/<table>/all/")
+@app.route("/request/<table>/")
+def get_request(table, search = None, data = None):
+    if get_checks(request.method, table, search, data):
         app.handle_exception(400)
-    return "OK"
+    else:
+        try:
+            mass_dat = True if "all" in request.url else False
+            requested_data = comm.get_req_handler(table, search, data, mass_dat)
+        except exc.Error as e:
+            app.handle_exception(e.err_code)
+    return requested_data
+
+def get_checks(method, table, search, data):
+    rules = [
+        method != "GET",
+        str.isalpha(search) == False,
+        data == "0",
+        str.isdigit(data) == False,
+        table == None,
+        str.isalpha(table) == False
+        ]
+    if any(rules):
+        return False
+    return True
 
 @app.route("/send", methods=["POST"])
 def post_request():
     if request.method != "POST":
         app.handle_exception(400)
+    else:
+        data = request.get_json()
+        comm.post_req_handler(data["table"], data["values"])
     return "OK"
 
 @app.route("/update", methods=["PUT"])
@@ -36,6 +62,7 @@ def put_request():
 def delete_request():
     if request.method != "DELETE":
         app.handle_exception(400)
+    else:
     return "OK"
 
 @app.errorhandler(202)
