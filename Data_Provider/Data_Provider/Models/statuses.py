@@ -3,8 +3,8 @@ Speaks for itself I suppose.
 """
 
 status_codes = {
-	200 : "OK -> All good!",
-	200 : "CREATED -> Entry successfully created.",
+	200 : "OK -> Up and running!",
+	201 : "CREATED -> Entry successfully created.",
 	202 : "ACCEPTED -> The requested action failed to perform.",
 	204 : "NO_CONTENT -> This entry could not be found.",
 	400 : "BAD_REQUEST -> Malformed request received, or via wrong method.",

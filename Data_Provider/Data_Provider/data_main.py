@@ -13,7 +13,9 @@ app = Flask(__name__)
 def home():
     if request.method != "GET":
         app.handle_exception(400)
-    return "OK"
+    if not comm.authors.check_connection():
+        app.handle_exception(503)
+    return comm.create_response(200)
 
 @app.route("/request/<table>/<string:seach>/<data>", methods=["GET"])
 @app.route("/request/<table>/<string:search>")
@@ -33,11 +35,11 @@ def get_request(table, search = None, data = None):
 def get_checks(method, table, search, data):
     rules = [
         method != "GET",
-        str.isalpha(search) == False,
+        not str.isalpha(search),
         data == "0",
-        str.isdigit(data) == False,
+        not str.isdigit(data),
         table == None,
-        str.isalpha(table) == False
+        not str.isalpha(table)
         ]
     if any(rules):
         return False
@@ -50,20 +52,20 @@ def post_request():
     else:
         data = request.get_json()
         comm.post_req_handler(data["table"], data["values"])
-    return "OK"
+    return comm.create_response(201)
 
 @app.route("/update", methods=["PUT"])
 def put_request():
     if request.method != "PUT":
         app.handle_exception(400)
-    return "OK"
+    return comm.create_response(200)
 
 @app.route("/delete", methods=["DELETE"])
 def delete_request():
     if request.method != "DELETE":
         app.handle_exception(400)
     else:
-    return "OK"
+        return comm.create_response(200)
 
 @app.errorhandler(202)
 def accepted(e):

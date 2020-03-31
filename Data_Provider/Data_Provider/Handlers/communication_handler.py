@@ -16,7 +16,7 @@ articles = article_handler.Article_Handler(creds[0], creds[1], creds[2])
 sources = source_handler.Source_Handler(creds[0], creds[1], creds[2])
 
 def create_response(stat_code, obj = None):
-	data = json.dumps(obj) if obj != None else "No Data"
+	data = json.dumps(obj) if obj != None else f"No Response Data: {get_status(stat_code)}"
 	return Response(
 			response=data,
 			status=stat_code,

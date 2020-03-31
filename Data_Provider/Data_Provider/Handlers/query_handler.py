@@ -24,7 +24,10 @@ class Query_Handler(object):
 				table=sql.Identifier(table_),
 				searc_column=sql.Identifier(search_column_),
                    phrase=sql.Identifier(search_phrase)))
-		return cursor.fetchone()
+		entry = cursor.fetchone()
+		if entry == None:
+			raise exc.No_Content("The entry sought out does not exist.")
+		return entry
 
 	@conn_creator
 	@try_catch_deco
@@ -33,7 +36,11 @@ class Query_Handler(object):
 		cursor.execute(
         sql.SQL("SELECT * FROM {table};").
             format(table=sql.Identifier(table_)))
-		return cursor.fetchall()
+
+		entries = cursor.fetchall()
+		if entries == []:
+			raise exc.No_Content("The entries sought out do not exist.")
+		return entries
 
 	@conn_creator
 	@try_catch_deco
@@ -80,7 +87,7 @@ class Query_Handler(object):
 	def try_catch_deco(func):
 		try:
 			func()
-		except (Exception, psycopg2.Error) as e:
+		except psycopg2.Error as e:
 			raise exc.Internal_Error("A database error occured", e)
 
 	def check_connection(self):
