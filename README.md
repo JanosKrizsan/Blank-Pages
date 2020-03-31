@@ -12,8 +12,9 @@ This is a blog-template which uses an EF Core database for persistence of Articl
 - Entity Framework
 - JavaScript
 - React.js
+- Python
 
-## Features
+## Planned Features
 
 - Is a single-page web application
 - Hidden login, authentication, JWT token
@@ -50,7 +51,6 @@ Entry updater, it compares values and different ones are overwritten in the data
         private void EntryUpdater(EntityEntry entry, object updatedEntry)
         {
             dynamic update;
-
             switch (updatedEntry.GetType().Name)
             {
                 case nameof(Article):
@@ -66,12 +66,10 @@ Entry updater, it compares values and different ones are overwritten in the data
                     update = string.Empty;
                     break;
             }
-
             if (update is string)
             {
                 return;
             }
-
             foreach (var prop in entry.Properties)
             {
                 var newVal = update.GetType().GetProperty(prop.Metadata.Name).GetValue(update, null);
@@ -82,10 +80,25 @@ Entry updater, it compares values and different ones are overwritten in the data
                     prop.CurrentValue = (object)newVal;
                 }
             }
-
             _context.SaveChanges();
         }
 ```
+
+A similar thing in python, the instantiated item's values are set.
+```
+def set_attributes(obj, data):
+	for k, v in data.items():
+		setattr(obj, k, v)
+	return obj
+```
+## Python Data Handler
+
+Imported:<br>
+- Flask for request/response handling
+- PSQL for database access and edition
+- Flask_jwt for authentication via JWT
+- Bcrypt used for password hashing
+- Stdiomask for simple PSQL-password hiding
 
 ## Installation
 
@@ -166,5 +179,9 @@ SC QUERYEX "%SvcName%" | FIND "STATE" | FIND /v "RUNNING" > NUL && (
 
 ## Miscellaneous
 
-[Shell Script Source](https://www.brankovucinec.com/check-if-service-is-running-and-start-it-when-it-is-not-running/)
+[Shell Script Source](https://www.brankovucinec.com/check-if-service-is-running-and-start-it-when-it-is-not-running/)<br>
 [Img Source](https://wallhaven.cc/w/ne533o)
+
+## Disclaimer
+
+### This project is purely for practice and educational purposes.
