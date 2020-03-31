@@ -5,6 +5,7 @@ Handles author related queries.
 from .query_handler import Query_Handler as Queries
 from Data_Provider.Models.author import Author as auth
 from Data_Provider.Static.utils import create_val_string, create_author
+import bcrypt
 
 class Author_Handler(Queries):
 	
@@ -27,6 +28,8 @@ class Author_Handler(Queries):
 		super().update_data("authors", create_val_string(values), search_column, phrase)
 
 	def add_data(self, values):
+		hash = bcrypt.hashpw(values[1].encode(), bcrypt.gensalt())
+		vals = [values[0], hash]
 		super().add_data("authors", "name, password", values)
 
 	def delete_data(self, phrase):
