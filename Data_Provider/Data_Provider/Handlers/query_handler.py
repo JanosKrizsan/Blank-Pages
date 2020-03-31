@@ -13,6 +13,7 @@ class Query_Handler(object):
 		self.details = details(name, pwd, db)
 
 	@conn_creator
+	@try_catch_deco
 	def get_data(cursor, fields_, table_, search_column_, search_phrase):
 		cursor.execute(
         sql.SQL("""
@@ -26,6 +27,7 @@ class Query_Handler(object):
 		return cursor.fetchone()
 
 	@conn_creator
+	@try_catch_deco
 	def get_all_data(cursor, vals):
 		table_ = vals[0]
 		cursor.execute(
@@ -34,6 +36,7 @@ class Query_Handler(object):
 		return cursor.fetchall()
 
 	@conn_creator
+	@try_catch_deco
 	def update_data(cursor, table_, values_, search_column_, phrase_):
 		cursor.execute(
         sql.SQL("""

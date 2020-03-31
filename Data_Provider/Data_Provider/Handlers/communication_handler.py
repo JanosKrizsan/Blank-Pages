@@ -9,6 +9,7 @@ import Data_Provider.Models.exceptions as exc
 from flask import json, Response
 
 creds = psql_creds()
+data_error = "Invalid data provided."
 
 authors = author_handler.Author_Handler(creds[0], creds[1], creds[2])
 articles = article_handler.Article_Handler(creds[0], creds[1], creds[2])
@@ -44,19 +45,19 @@ def get_req_handler(table, phrase, search_col, mass_dat):
 			dat = func(search_col, phrase)
 		return dat;
 	else:
-		raise exc.Accepted("Invalid Data Provided")
+		raise exc.Accepted(data_error, table)
 
 def post_req_handler(table, vals):
 	func = authors.add_data if "au" in table else articles.add_data if "ar" in table else sources.add_data if "so" in table else None
 	if func == None:
-		raise exc.Accepted("Invalid Data Provided")
+		raise exc.Accepted(data_error, table)
 	func(vals)
 	return True
 
 def put_req_handler(table, vals, col, phrase,):
 	func = authors.update_data if "au" in table else articles.update_data if "ar" in table else sources.update_data if "so" in table else None
 	if func == None:
-		raise exc.Accepted("Invalid Data Provided")
+		raise exc.Accepted(data_error, table)
 	func(vals, col, phrase)
 	return True
 
@@ -78,4 +79,4 @@ def del_req_handler(table, phrase, mass_dat):
 			func(phrase)
 		return True
 	else:
-		raise exc.Accepted("Invalid Data Provided")
+		raise exc.Accepted(data_error, table)
