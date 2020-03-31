@@ -25,6 +25,10 @@ class Author_Handler(Queries):
 		return authors
 
 	def update_data(self, values, search_column, phrase):
+		if "password" in values:
+			for i, item in enumerate(values):
+				if item == "password":
+					values[i + 1] = bcrypt.hashpw(values[i + 1].encode(), bcrypt.gensalt())
 		super().update_data("authors", create_val_string(values), search_column, phrase)
 
 	def add_data(self, values):

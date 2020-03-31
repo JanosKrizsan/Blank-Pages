@@ -4,13 +4,12 @@ Routes of the app defined here.
 
 import Data_Provider.Handlers.communication_handler as comm
 import Data_Provider.Models.exceptions as exc
-from flask import Flask
-import requests
+from flask_jwt import JWT, jwt_required, current_identity
+from flask import Flask, request
 
 app = Flask(__name__)
 
 @app.route("/",  methods=["GET"])
-@app.route("/check")
 def home():
     if request.method != "GET":
         return comm.create_error_response(400)
@@ -18,12 +17,20 @@ def home():
         return comm.create_error_response(503)
     return comm.create_response(200)
 
+@app.route("/register", methods=["POST"])
+def register_user():
+    pass
+
+@app.route("/login", methods=["POST"])
+def login_user():
+    pass
+
 @app.route("/request/<table>/<string:seach>/<data>", methods=["GET"])
 @app.route("/request/<table>/<string:search>")
 @app.route("/request/<table>/all/")
 @app.route("/request/<table>/")
 def get_request(table, search = None, data = None):
-    if comm.get_checks(request.method, table, search, data):
+    if comm.get_check(request.method, table, search, data):
         return comm.create_error_response(400)
     else:
         try:
@@ -35,7 +42,7 @@ def get_request(table, search = None, data = None):
 
 @app.route("/send", methods=["POST"])
 def post_request():
-    if request.method != "POST":
+    if comm.endpoint_check(request, "POST"):
         return comm.create_error_response(400)
     else:
         data = request.get_json()
@@ -45,7 +52,7 @@ def post_request():
 
 @app.route("/update", methods=["PUT"])
 def put_request():
-    if request.method != "PUT":
+    if comm.endpoint_check(request, "PUT"):
         return comm.create_error_response(400)
     else:
         data = request.get_json()
@@ -55,7 +62,7 @@ def put_request():
 
 @app.route("/delete", methods=["DELETE"])
 def delete_request():
-    if request.method != "DELETE":
+    if comm.endpoint_check(request, "DELETE"):
         return comm.create_error_response(400)
     else:
         data = request.get_json()

@@ -47,7 +47,7 @@ def get_req_handler(table, phrase, search_col, mass_dat):
 	else:
 		raise exc.Accepted(data_error, table)
 
-def get_checks(method, table, search, data):
+def get_check(method, table, search, data):
     rules = [
         method != "GET",
         not str.isalpha(search),
@@ -56,9 +56,7 @@ def get_checks(method, table, search, data):
         table == None,
         not str.isalpha(table)
         ]
-    if any(rules):
-        return False
-    return True
+    return any(rules)
 
 def post_req_handler(table, vals):
 	func = authors.add_data if "au" in table else articles.add_data if "ar" in table else sources.add_data if "so" in table else None
@@ -93,3 +91,6 @@ def del_req_handler(table, phrase, mass_dat):
 		return True
 	else:
 		raise exc.Accepted(data_error, table)
+
+def endpoint_check(request, method):
+	return any([req.method != method, not req.is_json])
