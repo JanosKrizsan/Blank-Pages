@@ -1,6 +1,7 @@
 """
 Handles, or provides generic queries which are called by sub-handlers for the specific tables.
 """
+
 from .connection_handler import Connection_Details as details, connect_to_db, conn_creator, check_database_exists
 import Data_Provider.Models.exceptions as exc
 from psycopg2 import sql, extras, errors

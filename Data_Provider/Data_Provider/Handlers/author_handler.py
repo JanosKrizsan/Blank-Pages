@@ -1,6 +1,7 @@
 """
 Handles author related queries.
 """
+
 from .query_handler import Query_Handler as Queries
 from Data_Provider.Models.author import Author as auth
 from Data_Provider.Static.utils import create_val_string, create_author

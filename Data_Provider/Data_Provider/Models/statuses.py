@@ -1,3 +1,7 @@
+"""
+Speaks for itself I suppose.
+"""
+
 status_codes = {
 	200 : "OK -> All good!",
 	200 : "CREATED -> Entry successfully created.",

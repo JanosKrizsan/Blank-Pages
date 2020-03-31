@@ -1,5 +1,5 @@
 """
-Created exceptions, most likely they will not be used.
+Created exceptions.
 """
 
 from Data_Provider.Models.statuses import get_status

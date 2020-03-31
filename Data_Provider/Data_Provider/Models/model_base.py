@@ -1,5 +1,3 @@
-import abc
-
 class ModelBase(object):
 
 	@property
