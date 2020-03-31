@@ -10,11 +10,12 @@ import requests
 app = Flask(__name__)
 
 @app.route("/",  methods=["GET"])
+@app.route("/check")
 def home():
     if request.method != "GET":
-        app.handle_exception(400)
+        return comm.create_error_response(400)
     if not comm.authors.check_connection():
-        app.handle_exception(503)
+        return comm.create_error_response(503)
     return comm.create_response(200)
 
 @app.route("/request/<table>/<string:seach>/<data>", methods=["GET"])
@@ -22,91 +23,42 @@ def home():
 @app.route("/request/<table>/all/")
 @app.route("/request/<table>/")
 def get_request(table, search = None, data = None):
-    if get_checks(request.method, table, search, data):
-        app.handle_exception(400)
+    if comm.get_checks(request.method, table, search, data):
+        return comm.create_error_response(400)
     else:
         try:
             mass_dat = True if "all" in request.url else False
             requested_data = comm.get_req_handler(table, search, data, mass_dat)
         except exc.Error as e:
-            app.handle_exception(e.err_code)
+            return comm.create_error_response(e.error_code)
     return requested_data
-
-def get_checks(method, table, search, data):
-    rules = [
-        method != "GET",
-        not str.isalpha(search),
-        data == "0",
-        not str.isdigit(data),
-        table == None,
-        not str.isalpha(table)
-        ]
-    if any(rules):
-        return False
-    return True
 
 @app.route("/send", methods=["POST"])
 def post_request():
     if request.method != "POST":
-        app.handle_exception(400)
+        return comm.create_error_response(400)
     else:
         data = request.get_json()
-        comm.post_req_handler(data["table"], data["values"])
-    return comm.create_response(201)
+        if comm.post_req_handler(data["table"], data["values"]):
+            return comm.create_response(201)
+        return comm.create_error_response(202)
 
 @app.route("/update", methods=["PUT"])
 def put_request():
     if request.method != "PUT":
-        app.handle_exception(400)
-    return comm.create_response(200)
+        return comm.create_error_response(400)
+    else:
+        data = request.get_json()
+        if comm.put_req_handler(data["table"], data["values"], data["column"], data["phrase"]):
+            return comm.create_response(211)
+        return comm.create_error_response(202)
 
 @app.route("/delete", methods=["DELETE"])
 def delete_request():
     if request.method != "DELETE":
-        app.handle_exception(400)
+        return comm.create_error_response(400)
     else:
-        return comm.create_response(200)
-
-@app.errorhandler(202)
-def accepted(e):
-    return comm.create_error_response(202)
-
-@app.errorhandler(204)
-def no_content(e):
-    return comm.create_error_response(204)
-
-@app.errorhandler(400)
-def bad_request(e):
-    return comm.create_error_response(400)
-
-@app.errorhandler(401)
-def unauthorized(e):
-    return comm.create_error_response(401)
-
-@app.errorhandler(403)
-def forbidden(e):
-    return comm.create_error_response(403)
-
-@app.errorhandler(404)
-def page_not_found(e):
-    return comm.create_error_response(404)
-
-@app.errorhandler(409)
-def conflict(e):
-    return comm.create_error_response(409)
-
-@app.errorhandler(418)
-def i_am_a_hal(e):
-    return comm.create_error_response(418)
-
-@app.errorhandler(500)
-def internal_error(e):
-    return comm.create_error_response(500)
-
-@app.errorhandler(501)
-def not_implemented(e):
-    return comm.create_error_response(501)
-
-@app.errorhandler(503)
-def service_unavailable(e):
-    return comm.create_error_response(503)
+        data = request.get_json()
+        if comm.del_req_handler(data["table"], data["phrase"], data["mass_dat"]):
+            return comm.create_response(219)
+        return comm.create_error_response(202)

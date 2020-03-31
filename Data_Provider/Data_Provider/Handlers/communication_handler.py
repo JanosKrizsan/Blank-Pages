@@ -47,6 +47,19 @@ def get_req_handler(table, phrase, search_col, mass_dat):
 	else:
 		raise exc.Accepted(data_error, table)
 
+def get_checks(method, table, search, data):
+    rules = [
+        method != "GET",
+        not str.isalpha(search),
+        data == "0",
+        not str.isdigit(data),
+        table == None,
+        not str.isalpha(table)
+        ]
+    if any(rules):
+        return False
+    return True
+
 def post_req_handler(table, vals):
 	func = authors.add_data if "au" in table else articles.add_data if "ar" in table else sources.add_data if "so" in table else None
 	if func == None:

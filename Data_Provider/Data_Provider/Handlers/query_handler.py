@@ -13,7 +13,6 @@ class Query_Handler(object):
 		self.details = details(name, pwd, db)
 
 	@conn_creator
-	@try_catch_deco
 	def get_data(cursor, fields_, table_, search_column_, search_phrase):
 		cursor.execute(
         sql.SQL("""
@@ -30,7 +29,6 @@ class Query_Handler(object):
 		return entry
 
 	@conn_creator
-	@try_catch_deco
 	def get_all_data(cursor, vals):
 		table_ = vals[0]
 		cursor.execute(
@@ -43,7 +41,6 @@ class Query_Handler(object):
 		return entries
 
 	@conn_creator
-	@try_catch_deco
 	def update_data(cursor, table_, values_, search_column_, phrase_):
 		cursor.execute(
         sql.SQL("""
@@ -57,7 +54,6 @@ class Query_Handler(object):
 				   phrase=sql.Identifier(phrase_)))
 
 	@conn_creator
-	@try_catch_deco
 	def add_data(cursor, table_, columns_, values_):
 		cursor.execute(sql.SQL("""
 			INSERT INTO {table} ({columns})
@@ -67,7 +63,6 @@ class Query_Handler(object):
 					values=sql.Identifier(values_)))
 
 	@conn_creator
-	@try_catch_deco
 	def delete_data(cursor, table_, search_column_, phrase_):
 		cursor.execute(
 		sql.SQL("DELETE FROM {table} WHERE {search_column} = '{phrase}';").
@@ -77,18 +72,11 @@ class Query_Handler(object):
 
 
 	@conn_creator
-	@try_catch_deco
 	def wipe_data(cursor, table_):
 		cursor.execute(
 		sql.SQL("DELETE FROM {table};").
 			format(table=sql.Identifier(table_)))
 
-
-	def try_catch_deco(func):
-		try:
-			func()
-		except psycopg2.Error as e:
-			raise exc.Internal_Error("A database error occured", e)
 
 	def check_connection(self):
 		check_database_exists(self.details)

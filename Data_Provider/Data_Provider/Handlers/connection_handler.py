@@ -25,12 +25,15 @@ class Connection_Details(object):
 	
 def conn_creator(func):
 	def wrapper(*args, **kwargs):
-		conn = connect_to_db()
-		dict_cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-		vars = args[1:]
-		ret_value = func(dict_cur, vars, **kwargs)
-		dict_cur.close()
-		conn.close()
+		try:
+			conn = connect_to_db()
+			dict_cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+			vars = args[1:]
+			ret_value = func(dict_cur, vars, **kwargs)
+			dict_cur.close()
+			conn.close()
+		except psycopg2.Error as e:
+			raise exc.Internal_Error("A database error occured", e)
 		return ret_value
 	return wrapper
 

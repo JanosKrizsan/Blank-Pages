@@ -1,12 +1,14 @@
 """
-Speaks for itself I suppose.
+Status codes and their relevant response strings.
 """
 
 status_codes = {
 	200 : "OK -> Up and running!",
 	201 : "CREATED -> Entry successfully created.",
-	202 : "ACCEPTED -> The requested action failed to perform.",
+	202 : "ACCEPTED -> The requested action was accepted, but failed to perform.",
 	204 : "NO_CONTENT -> This entry could not be found.",
+	211 : "CONTENT_UPDATED -> This entry has been successfully updated.",
+	219 : "CONTENT_DELETED -> Deletion completed successfully.",
 	400 : "BAD_REQUEST -> Malformed request received, or via wrong method.",
 	401 : "UNAUTHORIZED -> You need to be authorized to perform this action.",
 	403 : "FORBIDDEN -> You are forbidden to retrieve this entry.",
