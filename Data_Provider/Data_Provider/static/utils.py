@@ -6,8 +6,15 @@ from Data_Provider.Models.author import Author
 from Data_Provider.Models.article import Article
 from Data_Provider.Models.source import Source
 import datetime
+import bcrypt
 import xml.etree.ElementTree as et
 import io
+
+def hash_n_salt_pass(password):
+	return bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+
+def check_hash_n_pass(hash, password):
+	return hash_n_salt_pass(password) == hash
 
 def create_val_string(values):
 	string_vals = []

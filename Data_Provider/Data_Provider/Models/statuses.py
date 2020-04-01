@@ -3,7 +3,8 @@ Status codes and their relevant response strings.
 """
 
 status_codes = {
-	200 : "OK -> Up and running!",
+	104 : "LOGIN_REQUIRED -> You need to log in to access this data",
+	200 : "OK -> Successful completion.",
 	201 : "CREATED -> Entry successfully created.",
 	202 : "ACCEPTED -> The requested action was accepted, but failed to perform.",
 	204 : "NO_CONTENT -> This entry could not be found.",

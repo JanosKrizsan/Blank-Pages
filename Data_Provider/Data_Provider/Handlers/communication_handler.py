@@ -3,6 +3,7 @@ Handles requests and responses.
 """
 
 from Data_Provider.Handlers import article_handler, author_handler, source_handler
+from Data_Provider.Static.utils import check_hash_n_pass
 from Data_Provider.Static.creds import psql_creds
 from Data_Provider.Models.statuses import get_status
 import Data_Provider.Models.exceptions as exc
@@ -94,3 +95,11 @@ def del_req_handler(table, phrase, mass_dat):
 
 def endpoint_check(request, method):
 	return any([req.method != method, not req.is_json])
+
+def check_user(username, password):
+	try:
+		hash = authors.get_password("name", username)
+		return check_hash_n_pass(hash, password)
+	except exc.Error:
+		raise exc.Unauthorized("Wrong login details provided.")
+	

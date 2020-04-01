@@ -4,7 +4,7 @@ Handles author related queries.
 
 from .query_handler import Query_Handler as Queries
 from Data_Provider.Models.author import Author as auth
-from Data_Provider.Static.utils import create_val_string, create_author
+from Data_Provider.Static.utils import create_val_string, create_author, hash_n_salt_pass
 import bcrypt
 
 class Author_Handler(Queries):
@@ -24,16 +24,23 @@ class Author_Handler(Queries):
 			authors.append(create_author(dat))
 		return authors
 
+	def get_password(self, search_column, phrase):
+		data = super().get_data("password", "authors", search_column, phrase)
+		return data
+
 	def update_data(self, values, search_column, phrase):
+		pass_placement = 0
 		if "password" in values:
 			for i, item in enumerate(values):
 				if item == "password":
-					values[i + 1] = bcrypt.hashpw(values[i + 1].encode(), bcrypt.gensalt())
+					pass_placement = values[i + 1]
+					break
+		password = values[pass_placement]
+		values[pass_placement] = hash_n_salt_pass(password)
 		super().update_data("authors", create_val_string(values), search_column, phrase)
 
 	def add_data(self, values):
-		hash = bcrypt.hashpw(values[1].encode(), bcrypt.gensalt())
-		vals = [values[0], hash]
+		vals = [values[0], hash_n_salt_pass(values[1])]
 		super().add_data("authors", "name, password", values)
 
 	def delete_data(self, phrase):
@@ -45,3 +52,4 @@ class Author_Handler(Queries):
 	def check_connection(self):
 		super().check_connection()
 		return True
+

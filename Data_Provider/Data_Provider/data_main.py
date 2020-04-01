@@ -1,13 +1,39 @@
 """
 Routes of the app defined here.
+TODO -> after JWT make sure only the admin can edit author / user information 
+TODO -> IP addresses being saved and can be blacklisted
+Actually, you can save IP addresses in the DB and highlight users as blacklisted. If so their data is removed and 
+they remain blacklisted.
 """
 
 import Data_Provider.Handlers.communication_handler as comm
 import Data_Provider.Models.exceptions as exc
-from flask_jwt import JWT, jwt_required, current_identity
-from flask import Flask, request
+from datetime import timedelta
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
+app.config["JWT_SECRET_KEY"] = "a_secret_key" #development key, change for deployment
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=1)
+app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=7)
+app.config["JWT_QUERY_STRING_NAME"] = "access_tkn"
+jwt = JWTManager(app)
+
+@jwt.user_claims_loader
+def add_token(identity):
+    return {"user" : f"{identity}"}
+
+@jwt.claims_verification_failed_loader
+def jwt_verification_failed():
+    return comm.create_error_response(418)
+
+@jwt.expired_token_loader
+def access_expired(expired_tkn):
+    return comm.create_response(104, expired_tkn["type"])
+
+@jwt.unauthorized_loader
+def access_denied():
+    return comm.create_error_response(401)
 
 @app.route("/",  methods=["GET"])
 def home():
@@ -19,16 +45,27 @@ def home():
 
 @app.route("/register", methods=["POST"])
 def register_user():
-    pass
+    if comm.endpoint_check(request, "POST"):
+        return comm.create_error_response(400)
+    else:
+        pass
 
 @app.route("/login", methods=["POST"])
 def login_user():
-    pass
+    if comm.endpoint_check(request, "POST"):
+        return comm.create_error_response(400)
+    else:
+        user_name = request.get_json()["username"]
+        pass_word = request.get_json()["password"]
+        if not comm.check_user(user_name, pass_word):
+            token = {"access_tkn" : create_access_token(user_name)}
+        return comm.create_response(200, token)
 
 @app.route("/request/<table>/<string:seach>/<data>", methods=["GET"])
 @app.route("/request/<table>/<string:search>")
 @app.route("/request/<table>/all/")
 @app.route("/request/<table>/")
+@jwt_required
 def get_request(table, search = None, data = None):
     if comm.get_check(request.method, table, search, data):
         return comm.create_error_response(400)
@@ -41,6 +78,7 @@ def get_request(table, search = None, data = None):
     return requested_data
 
 @app.route("/send", methods=["POST"])
+@jwt_required
 def post_request():
     if comm.endpoint_check(request, "POST"):
         return comm.create_error_response(400)
@@ -51,6 +89,7 @@ def post_request():
         return comm.create_error_response(202)
 
 @app.route("/update", methods=["PUT"])
+@jwt_required
 def put_request():
     if comm.endpoint_check(request, "PUT"):
         return comm.create_error_response(400)
@@ -61,6 +100,7 @@ def put_request():
         return comm.create_error_response(202)
 
 @app.route("/delete", methods=["DELETE"])
+@jwt_required
 def delete_request():
     if comm.endpoint_check(request, "DELETE"):
         return comm.create_error_response(400)

@@ -33,7 +33,7 @@ def conn_creator(func):
 			dict_cur.close()
 			conn.close()
 		except psycopg2.Error as e:
-			raise exc.Internal_Error("A database error occured", e)
+			raise exc.Internal_Error("A database error occurred", e)
 		return ret_value
 	return wrapper
 
