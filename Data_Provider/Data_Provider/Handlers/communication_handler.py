@@ -2,7 +2,7 @@
 Handles requests and responses.
 """
 
-from Data_Provider.Handlers import article_handler, author_handler, source_handler
+from Data_Provider.Handlers import article_handler, author_handler, source_handler, blacklist_handler
 from Data_Provider.Static.utils import check_hash_n_pass
 from Data_Provider.Static.creds import psql_creds
 from Data_Provider.Models.statuses import get_status
@@ -15,6 +15,7 @@ data_error = "Invalid data provided."
 authors = author_handler.Author_Handler(creds[0], creds[1], creds[2])
 articles = article_handler.Article_Handler(creds[0], creds[1], creds[2])
 sources = source_handler.Source_Handler(creds[0], creds[1], creds[2])
+addresses = blacklist_handler.Blacklist_Handler(creds[0], creds[1], creds[2])
 
 def create_response(stat_code, obj = None):
 	data = json.dumps(obj) if obj != None else f"No Response Data: {get_status(stat_code)}"
@@ -48,9 +49,8 @@ def get_req_handler(table, phrase, search_col, mass_dat):
 	else:
 		raise exc.Accepted(data_error, table)
 
-def get_check(method, table, search, data):
+def get_check(table, search, data):
     rules = [
-        method != "GET",
         not str.isalpha(search),
         data == "0",
         not str.isdigit(data),
@@ -93,13 +93,30 @@ def del_req_handler(table, phrase, mass_dat):
 	else:
 		raise exc.Accepted(data_error, table)
 
-def endpoint_check(request, method):
-	return any([req.method != method, not req.is_json])
+def endpoint_check(request):
+	return not req.is_json
 
-def check_user(username, password):
+def check_password(username, password):
 	try:
 		hash = authors.get_password("name", username)
 		return check_hash_n_pass(hash, password)
 	except exc.Error:
-		raise exc.Unauthorized("Wrong login details provided.")
-	
+		raise exc.Unauthorized("Account details not found, please register first.")
+
+def data_validator(func):
+	def wrapper(*args, **kwargs):
+		try:
+			func(**kwargs)
+			return False
+		except exc.Error:
+			return True
+	return wrapper
+
+@data_validator	
+def check_user_validity(username, ip_address):
+	author = authors.get_data("name", username)
+
+@data_validator
+def check_address_validity(ip_address):
+	address = addresses.get_data("address", ip_address)
+

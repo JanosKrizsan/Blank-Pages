@@ -5,6 +5,7 @@ Object instantiation, saving/ reading articles to and fro' XML files.
 from Data_Provider.Models.author import Author
 from Data_Provider.Models.article import Article
 from Data_Provider.Models.source import Source
+from Data_Provider.Models.address import Address
 import datetime
 import bcrypt
 import xml.etree.ElementTree as et
@@ -43,6 +44,10 @@ def create_article(data):
 def create_source(data):
 	source = Source()
 	return set_attributes(source, data)
+
+def create_address(data):
+	address = Address()
+	return setset_attributes(address, data)
 
 def serialize_to_file(article):
 	data = et.Element("article")

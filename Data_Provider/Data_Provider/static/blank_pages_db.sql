@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS dbo.Authors;
 DROP TABLE IF EXISTS dbo.Articles;
 DROP TABLE IF EXISTS dbo.Sources;
+DROP TABLE IF EXISTS dbo.Blacklist;
 
 CREATE TABLE Authors (
 	id SERIAL PRIMARY KEY,
@@ -15,7 +16,7 @@ CREATE TABLE Articles (
 	full_file_path VARCHAR(255),
 	author_id int NOT NULL,
 	creation_date TIMESTAMP NOT NULL,
-	FOREIGN KEY(author_id) REFERENCES Authors(id)
+	FOREIGN KEY(author_id) REFERENCES Authors(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Sources (
@@ -23,5 +24,12 @@ CREATE TABLE Sources (
 	name VARCHAR(30) NOT NULL UNIQUE,
 	source_data VARCHAR(100) NOT NULL,
 	parent_article_id int,
-	FOREIGN KEY(parent_article_id) REFERENCES Articles(id)
+	FOREIGN KEY(parent_article_id) REFERENCES Articles(id) ON DELETE CASCADE
+);
+
+CREATE TABLE Blacklist (
+	id SERIAL PRIMARY KEY,
+	address INET NOT NULL UNIQUE,
+	author_id int,
+	FOREIGN KEY(author_id) REFERENCES Authors(id) ON DELETE CASCADE
 );

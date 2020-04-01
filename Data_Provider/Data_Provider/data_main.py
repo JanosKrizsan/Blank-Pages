@@ -8,16 +8,23 @@ they remain blacklisted.
 
 import Data_Provider.Handlers.communication_handler as comm
 import Data_Provider.Models.exceptions as exc
-from datetime import timedelta
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
-app.config["JWT_SECRET_KEY"] = "a_secret_key" #development key, change for deployment
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=1)
-app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=7)
-app.config["JWT_QUERY_STRING_NAME"] = "access_tkn"
 jwt = JWTManager(app)
+
+@app.errorhandler(500)
+def internal_error(e):
+    return comm.create_error_response(500)
+
+@app.errorhandler(404)
+def not_found_error(e):
+    return comm.create_error_response(404)
+
+@app.errorhandler(405)
+def wrong_method(e):
+    return comm.create_error_response(405)
 
 @jwt.user_claims_loader
 def add_token(identity):
@@ -32,34 +39,41 @@ def access_expired(expired_tkn):
     return comm.create_response(104, expired_tkn["type"])
 
 @jwt.unauthorized_loader
-def access_denied():
+def access_denied(arg):
     return comm.create_error_response(401)
 
 @app.route("/",  methods=["GET"])
 def home():
-    if request.method != "GET":
-        return comm.create_error_response(400)
     if not comm.authors.check_connection():
         return comm.create_error_response(503)
     return comm.create_response(200)
 
 @app.route("/register", methods=["POST"])
 def register_user():
-    if comm.endpoint_check(request, "POST"):
-        return comm.create_error_response(400)
-    else:
-        pass
+    user_name = request.get_json()["username"]
+    pass_word = request.get_json()["password"]
+    address = request.remote_addr
+    if not comm.check_user_validity(user_name):
+        return comm.create_response(108)
+    elif not comm.check_address_validity(address):
+        return comm.create_error_response(401)
+    comm.post_req_handler("authors", (name, password))
+    return comm.create_response(200)
 
 @app.route("/login", methods=["POST"])
 def login_user():
-    if comm.endpoint_check(request, "POST"):
+    if comm.endpoint_check(request):
         return comm.create_error_response(400)
     else:
         user_name = request.get_json()["username"]
         pass_word = request.get_json()["password"]
-        if not comm.check_user(user_name, pass_word):
-            token = {"access_tkn" : create_access_token(user_name)}
-        return comm.create_response(200, token)
+        try:
+            if comm.check_password(user_name, pass_word):
+                token = {"access_tkn" : create_access_token(user_name)}
+                return comm.create_response(200, token)
+            return comm.create_response(107)
+        except exc.Error as e:
+            return comm.create_error_response(e.err_code)
 
 @app.route("/request/<table>/<string:seach>/<data>", methods=["GET"])
 @app.route("/request/<table>/<string:search>")
@@ -67,7 +81,7 @@ def login_user():
 @app.route("/request/<table>/")
 @jwt_required
 def get_request(table, search = None, data = None):
-    if comm.get_check(request.method, table, search, data):
+    if comm.get_check(table, search, data):
         return comm.create_error_response(400)
     else:
         try:
@@ -80,7 +94,7 @@ def get_request(table, search = None, data = None):
 @app.route("/send", methods=["POST"])
 @jwt_required
 def post_request():
-    if comm.endpoint_check(request, "POST"):
+    if comm.endpoint_check(request):
         return comm.create_error_response(400)
     else:
         data = request.get_json()
@@ -91,7 +105,7 @@ def post_request():
 @app.route("/update", methods=["PUT"])
 @jwt_required
 def put_request():
-    if comm.endpoint_check(request, "PUT"):
+    if comm.endpoint_check(request):
         return comm.create_error_response(400)
     else:
         data = request.get_json()
@@ -102,7 +116,7 @@ def put_request():
 @app.route("/delete", methods=["DELETE"])
 @jwt_required
 def delete_request():
-    if comm.endpoint_check(request, "DELETE"):
+    if comm.endpoint_check(request):
         return comm.create_error_response(400)
     else:
         data = request.get_json()

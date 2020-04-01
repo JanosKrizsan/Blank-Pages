@@ -70,13 +70,11 @@ class Query_Handler(object):
 					search_column=sql.Identifier(search_column_),
 					phrase=sql.Identifier(phrase_)))
 
-
 	@conn_creator
 	def wipe_data(cursor, table_):
 		cursor.execute(
 		sql.SQL("DELETE FROM {table};").
 			format(table=sql.Identifier(table_)))
-
 
 	def check_connection(self):
 		check_database_exists(self.details)

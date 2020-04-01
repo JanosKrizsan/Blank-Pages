@@ -31,6 +31,9 @@
   <ItemGroup>
     <Compile Include="Data_Provider\Handlers\author_handler.py" />
     <Compile Include="Data_Provider\Handlers\article_handler.py" />
+    <Compile Include="Data_Provider\Handlers\blacklist_handler.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data_Provider\Handlers\communication_handler.py">
       <SubType>Code</SubType>
     </Compile>
@@ -52,7 +55,16 @@
     <Compile Include="Data_Provider\Models\author.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Data_Provider\Models\author_id_base.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data_Provider\Models\exceptions.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data_Provider\Models\address.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data_Provider\Models\id_base.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Data_Provider\Models\model_base.py">

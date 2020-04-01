@@ -1,16 +1,13 @@
-class ModelBase(object):
+from .id_base import Id_Base
 
-	@property
-	def prop_id(self):
-		return self.id
+class ModelBase(Id_Base):
+
+	def __init__(self):
+		pass
 
 	@property
 	def prop_name(self):
 		return self.name
-
-	@prop_id.setter
-	def prop_id(self, value):
-		self.id = value
 
 	@prop_name.setter
 	def prop_name(self, value):
