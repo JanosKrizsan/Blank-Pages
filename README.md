@@ -1,2 +1,2 @@
-# Blank-Page
-A blog template with C# backend and React frontend
+# Blank-Pages
+A blog template with everything.
