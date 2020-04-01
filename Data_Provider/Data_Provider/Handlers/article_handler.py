@@ -11,11 +11,13 @@ class Article_Handler(Queries):
 		super().__init__(name, pwd, db)
 
 	def get_data(self, search_column, phrase):
+		#TODO -> content info must be retrieved from XML file
 		fields = "title, sub_title, full_file_path, author_id, creation_date"
 		data = super().get_data(fields, "articles", search_column, phrase)
 		return create_article(data)
 
 	def get_all_data(self):
+		#TODO -> content info must be retrieved from XML files
 		datas = super().get_all_data("articles")
 		articles = []
 		for dat in datas:
@@ -23,9 +25,11 @@ class Article_Handler(Queries):
 		return articles
 
 	def update_data(self, values, search_column, phrase):
+		#TODO -> make sure the data is saved to XML here
 		super().update_data("articles", create_val_string(values), search_column, phrase)
 
 	def add_data(self, values):
+		#TODO -> make sure the data is saved to XML here
 		columns = "title, sub_title, full_file_path, author_id, creation_date"
 		super().add_data("articles", columns, values)
 

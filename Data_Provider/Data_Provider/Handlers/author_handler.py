@@ -28,7 +28,7 @@ class Author_Handler(Queries):
 		return data
 
 	def update_data(self, values, search_column, phrase):
-		pass_placement = 0
+		pass_placement
 		if "password" in values:
 			for i, item in enumerate(values):
 				if item == "password":

@@ -40,7 +40,7 @@ def get_req_handler(table, phrase, search_col, mass_dat):
 		"so" : sour
 		}
 	func = switcher.get(tbl, None)
-	if func != None:
+	if func is not None:
 		if mass_dat:
 			dat = func()
 		else:
@@ -60,15 +60,15 @@ def get_check(table, search, data):
     return any(rules)
 
 def post_req_handler(table, vals):
-	func = authors.add_data if "au" in table else articles.add_data if "ar" in table else sources.add_data if "so" in table else None
-	if func == None:
+	func = authors.add_data if "au" in table else articles.add_data if "ar" in table else sources.add_data if "so" in table else addresses.add_data if "bl" in table else None
+	if func is None:
 		raise exc.Accepted(data_error, table)
 	func(vals)
 	return True
 
 def put_req_handler(table, vals, col, phrase,):
 	func = authors.update_data if "au" in table else articles.update_data if "ar" in table else sources.update_data if "so" in table else None
-	if func == None:
+	if func is None:
 		raise exc.Accepted(data_error, table)
 	func(vals, col, phrase)
 	return True
@@ -84,7 +84,7 @@ def del_req_handler(table, phrase, mass_dat):
 		"so" : sour
 		}
 	func = switcher.get(tbl, None)
-	if func != None:
+	if func is not None:
 		if mass_dat:
 			func()
 		else:

@@ -46,6 +46,7 @@ def access_denied(arg):
 def home():
     if not comm.authors.check_connection():
         return comm.create_error_response(503)
+    comm.post_req_handler("blacklist", request.remote_addr)
     return comm.create_response(200)
 
 @app.route("/register", methods=["POST"])
