@@ -12,7 +12,7 @@ class Article_Handler(Queries):
 
 	def get_data(self, search_column, phrase):
 		#TODO -> content info must be retrieved from XML file
-		fields = "title, sub_title, full_file_path, author_id, creation_date"
+		fields = ["title", "sub_title", "full_file_path", "author_id", "creation_date"]
 		data = super().get_data(fields, "articles", search_column, phrase)
 		return create_article(data)
 

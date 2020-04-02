@@ -64,7 +64,7 @@ def register_user():
 
 @app.route("/login", methods=["POST"])
 def login_user():
-    if comm.endpoint_check(request):
+    if comm.endpoint_check(request) is False:
         return comm.create_error_response(400)
     else:
         user_name = request.get_json()["username"]

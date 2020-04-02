@@ -11,7 +11,7 @@ class Source_Handler(Queries):
 		super().__init__(name, pwd, db)
 	
 	def get_data(self, search_column, phrase):
-		fields = "name, source_data, parent_article_id"
+		fields = ["name", "source_data", "parent_article_id"]
 		data = super().get_data(fields, "sources", search_column, phrase)
 		return create_source(data)
 

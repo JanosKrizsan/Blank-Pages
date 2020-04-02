@@ -16,13 +16,13 @@ class Query_Handler(object):
 	def get_data(cursor, fields_, table_, search_column_, search_phrase):
 		cursor.execute(
         sql.SQL("""
-			SELECT {fields} from blank_pages.{table}
-			WHERE {search_column}='{phrase}';
+			SELECT {} from blank_pages.{}
+			WHERE {}={};
 		""").
-            format(fields=sql.Identifier(fields_),
-				table=sql.Identifier(table_),
-				searc_column=sql.Identifier(search_column_),
-                   phrase=sql.Literal(search_phrase)))
+            format(sql.SQL(",").join(map(sql.Identifier, fields_)),
+				sql.Identifier(table_),
+				sql.Identifier(search_column_),
+                sql.Literal(search_phrase)))
 		entry = cursor.fetchone()
 		if entry is None:
 			raise exc.No_Content("The entry sought out does not exist.")
@@ -54,14 +54,12 @@ class Query_Handler(object):
 
 	@conn_creator
 	def add_data(cursor, table_, columns_, values_):
-		query = sql.SQL("""
+		cursor.execute(sql.SQL("""
 			INSERT INTO blank_pages.{} ({})
 			VALUES ({});
 		""").format(sql.Identifier(table_),
 					sql.SQL(",").join(map(sql.Identifier, columns_)),
-					sql.SQL(",").join(map(sql.Literal, values_)))
-		quer = query.as_string(cursor)
-		cursor.execute(query)
+					sql.SQL(",").join(map(sql.Literal, values_))))
 
 	@conn_creator
 	def delete_data(cursor, table_, search_column_, phrase_):

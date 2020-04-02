@@ -11,8 +11,8 @@ class Author_Handler(Queries):
 	def __init__(self, name, pwd, db):
 		super().__init__(name, pwd, db)
 
-	def get_data(self, search_column, phrase):
-		fields = "id, name"
+	def get_data(self, search_column, phrase, fields = None):
+		fields = ["id", "name"]
 		data = super().get_data(fields, "authors", search_column, phrase)
 		return create_author(data)
 
@@ -23,8 +23,8 @@ class Author_Handler(Queries):
 			authors.append(create_author(dat))
 		return authors
 
-	def get_password(self, search_column, phrase):
-		data = super().get_data("password", "authors", search_column, phrase)
+	def get_password(self, phrase):
+		data = super().get_data(["password"], "authors", "name", phrase)
 		return data
 
 	def update_data(self, values, search_column, phrase):
@@ -39,7 +39,7 @@ class Author_Handler(Queries):
 		super().update_data("authors", create_val_string(values), search_column, phrase)
 
 	def add_data(self, values):
-		vals = [values[0], hash_n_salt_pass(values[1]).decode("utf-8")]
+		vals = [values[0], hash_n_salt_pass(values[1])]
 		super().add_data("authors", ["name", "password"], vals)
 
 	def delete_data(self, search_column, phrase):

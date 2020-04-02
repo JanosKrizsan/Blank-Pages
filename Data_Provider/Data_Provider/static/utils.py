@@ -15,7 +15,7 @@ def hash_n_salt_pass(password):
 	return bcrypt.hashpw(password.encode(), bcrypt.gensalt())
 
 def check_hash_n_pass(hash, password):
-	return hash_n_salt_pass(password) == hash
+	return hash == hash_n_salt_pass(password).decode("utf-8")
 
 def create_val_string(values):
 	string_vals = []

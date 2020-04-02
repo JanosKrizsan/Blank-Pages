@@ -18,7 +18,7 @@ sources = source_handler.Source_Handler(creds[0], creds[1], creds[2])
 addresses = blacklist_handler.Blacklist_Handler(creds[0], creds[1], creds[2])
 
 def create_response(stat_code, obj = None):
-	data = json.dumps(obj) if obj != None else "{No Response Data: {}}".format(get_status(stat_code))
+	data = json.dumps(obj) if obj != None else "{No Response Data = {}}".format(get_status(stat_code))
 	return Response(
 			response=data,
 			status=stat_code,
@@ -78,13 +78,13 @@ def get_n_del_req_handler(table, search_col, phrase, mass_dat, is_get):
 	else:
 		return False
 
-def endpoint_check(request):
-	return not req.is_json
+def endpoint_check(req):
+	return req.is_json
 
 def check_password(username, password):
 	try:
-		hash = authors.get_password("name", username)
-		return check_hash_n_pass(hash, password)
+		hash = authors.get_password(username)
+		return check_hash_n_pass(hash.get("password"), password)
 	except exc.Error:
 		raise exc.Unauthorized("Account details not found, please register first.")
 

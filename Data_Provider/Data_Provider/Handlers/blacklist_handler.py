@@ -7,7 +7,7 @@ class Blacklist_Handler(Queries):
 		super().__init__(name, pwd, db)
 
 	def get_data(self, search_column, phrase):
-		fields = "address, author_id"
+		fields = ["address", "author_id"]
 		data = super().get_data(fields, "blacklist", search_column, phrase)
 		return create_address(data)
 
