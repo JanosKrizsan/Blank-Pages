@@ -50,5 +50,3 @@ class Author_Handler(Queries):
 
 	def check_connection(self):
 		super().check_connection()
-		return True
-

@@ -16,7 +16,7 @@ class Query_Handler(object):
 	def get_data(cursor, fields_, table_, search_column_, search_phrase):
 		cursor.execute(
         sql.SQL("""
-			SELECT {fields} from {table}
+			SELECT {fields} from blank_pages.{table}
 			WHERE {search_column} = '{phrase}';
 		""").
             format(fields=sql.Identifier(fields_),
@@ -32,7 +32,7 @@ class Query_Handler(object):
 	def get_all_data(cursor, vals):
 		table_ = vals[0]
 		cursor.execute(
-        sql.SQL("SELECT * FROM {table};").
+        sql.SQL("SELECT * FROM blank_pages.{table};").
             format(table=sql.Identifier(table_)))
 
 		entries = cursor.fetchall()
@@ -44,7 +44,7 @@ class Query_Handler(object):
 	def update_data(cursor, table_, values_, search_column_, phrase_):
 		cursor.execute(
         sql.SQL("""
-			UPDATE {table}
+			UPDATE blank_pages.{table}
 			SET {values}
 			WHERE {search_column} = '{phrase}';
 		""").
@@ -56,7 +56,7 @@ class Query_Handler(object):
 	@conn_creator
 	def add_data(cursor, table_, columns_, values_):
 		cursor.execute(sql.SQL("""
-			INSERT INTO {table} ({columns})
+			INSERT INTO blank_pages.{table} ({columns})
 			VALUES ({values});
 		""").format(table=sql.Identifier(table_),
 					columns=sql.Identifier(columns_),
@@ -65,7 +65,7 @@ class Query_Handler(object):
 	@conn_creator
 	def delete_data(cursor, table_, search_column_, phrase_):
 		cursor.execute(
-		sql.SQL("DELETE FROM {table} WHERE {search_column} = '{phrase}';").
+		sql.SQL("DELETE FROM blank_pages.{table} WHERE {search_column} = '{phrase}';").
 			format(table=sql.Identifier(table_),
 					search_column=sql.Identifier(search_column_),
 					phrase=sql.Identifier(phrase_)))
@@ -73,7 +73,7 @@ class Query_Handler(object):
 	@conn_creator
 	def wipe_data(cursor, table_):
 		cursor.execute(
-		sql.SQL("DELETE FROM {table};").
+		sql.SQL("DELETE FROM blank_pages.{table};").
 			format(table=sql.Identifier(table_)))
 
 	def check_connection(self):

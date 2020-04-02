@@ -29,6 +29,7 @@ def create_error_response(stat_code):
 	error_data = {"Error_Message" : get_status(stat_code)}
 	return create_response(stat_code, error_data)
 
+#TODO -> refactor these
 def get_req_handler(table, phrase, search_col, mass_dat):
 	tbl = table[0:2]
 	auth = authors.get_all_data if mass_dat else authors.get_data
@@ -59,6 +60,7 @@ def get_check(table, search, data):
         ]
     return any(rules)
 
+#TODO -> refactor these
 def post_req_handler(table, vals):
 	func = authors.add_data if "au" in table else articles.add_data if "ar" in table else sources.add_data if "so" in table else addresses.add_data if "bl" in table else None
 	if func is None:
@@ -66,6 +68,7 @@ def post_req_handler(table, vals):
 	func(vals)
 	return True
 
+#TODO -> refactor these
 def put_req_handler(table, vals, col, phrase,):
 	func = authors.update_data if "au" in table else articles.update_data if "ar" in table else sources.update_data if "so" in table else None
 	if func is None:
@@ -73,6 +76,7 @@ def put_req_handler(table, vals, col, phrase,):
 	func(vals, col, phrase)
 	return True
 
+#TODO -> refactor these
 def del_req_handler(table, phrase, mass_dat):
 	tbl = table[0:2]
 	auth = authors.wipe_data if mass_dat else authors.delete_data

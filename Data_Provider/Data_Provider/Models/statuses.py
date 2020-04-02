@@ -9,6 +9,7 @@ status_codes = {
 	200 : "OK -> Successful completion.",
 	201 : "CREATED -> Entry successfully created.",
 	202 : "ACCEPTED -> The requested action was accepted, but failed to perform.",
+	203 : "SERVICE_RUNNING -> The service is up and running.",
 	204 : "NO_CONTENT -> This entry could not be found.",
 	211 : "CONTENT_UPDATED -> This entry has been successfully updated.",
 	219 : "CONTENT_DELETED -> Deletion completed successfully.",

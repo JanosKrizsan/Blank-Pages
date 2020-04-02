@@ -42,12 +42,13 @@ def access_expired(expired_tkn):
 def access_denied(arg):
     return comm.create_error_response(401)
 
-@app.route("/",  methods=["GET"])
+@app.route("/check-service",  methods=["GET"])
 def home():
-    if not comm.authors.check_connection():
-        return comm.create_error_response(503)
-    comm.post_req_handler("blacklist", request.remote_addr)
-    return comm.create_response(200)
+    try:
+        comm.authors.check_connection()
+    except exc.Error as e:
+        return comm.create_error_response(e.err_code)
+    return comm.create_response(203)
 
 @app.route("/register", methods=["POST"])
 def register_user():

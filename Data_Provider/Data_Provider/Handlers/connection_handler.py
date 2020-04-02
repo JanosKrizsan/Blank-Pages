@@ -30,8 +30,7 @@ def conn_creator(func):
 			dict_cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 			vars = args[1:]
 			ret_value = func(dict_cur, vars, **kwargs)
-			dict_cur.close()
-			conn.close()
+			close_connections(conn)
 		except psycopg2.Error as e:
 			raise exc.Internal_Error("A database error occurred", e)
 		return ret_value
@@ -41,8 +40,8 @@ def check_database_exists(info):
 	conn = None
 	try:
 		conn = psycopg2.connect(host=info.add, user=info.user_name, password=info.pwd, port=info.port)
-	except (Exception, psycopg2.DatabaseError) as e:
-		raise exc.Service_Unavailable("Unable to connect to database server.", e)
+	except (Exception, psycopg2.DatabaseError):
+		raise exc.Service_Unavailable("Database Provider could not be reached.")
 	if conn is not None:
 		conn.autocommit = True
 		curs = conn.cursor()
@@ -50,14 +49,17 @@ def check_database_exists(info):
 		databases = curs.fetchall()
 		dbs = list(itertools.chain(*databases))
 		if info.db in dbs:
-			curs.execute(sql.SQL("SELECT EXISTS (SELECT to_regclass('{datbase}.authors'));").format(datbase = sql.Identifier(info.db)))
-			exists = curs.fetchone()[0]
-			if exists == False:
-				read_sql_from_file()
+			close_connections(conn)
+			conn = connect_to_db()
+			curs = conn.cursor()
+			try:
+				curs.execute(sql.SQL("SELECT 'blank_pages.blacklist'::regclass;"))
+			except (Exception, psycopg2.DatabaseError):
+				read_sql_from_file(conn)
 		else:
 			create_database(info.db)
 	else:
-		raise exc.Internal_Error("Database Provider could not be reached.")
+		raise exc.Service_Unavailable("Database Provider could not be reached.")
 
 def connect_to_db():
 	try:
@@ -68,19 +70,24 @@ def connect_to_db():
 	return conn
 
 def create_database(db_name = None):
-	name = self.db if db_name == None else db_name
+	name_ = self.db if db_name == None else db_name
 	conn = psycopg2.connect(host="localhost", user="postgres", password="postgres", port="5432")
 	conn.autocommit = True
-	conn.cursor().execute(sql.SQL("CREATE DATABASE {}").format(sql.Identifier(name)))
+	conn.cursor().execute(sql.SQL("CREATE DATABASE {name}").format(name=sql.Identifier(name_)))
 	close_connections(conn)
+	read_sql_from_file()
 
 def close_connections(conn):
 	conn.cursor().close()
 	conn.close()
 
-def read_sql_from_file():
-	conn = connect_to_db()
-	conn.cursor().execute(open(os.environ["psql_file_path"], "r").read())
+def read_sql_from_file(conn = None):
+	if conn is None:
+		conn = connect_to_db()
+	curs = conn.cursor()
+	curs.execute("DROP SCHEMA IF EXISTS blank_pages;")
+	curs.execute("CREATE SCHEMA blank_pages;")
+	curs.execute(open(os.environ["psql_file_path"], "r").read())
 	close_connections(conn)
 
 
