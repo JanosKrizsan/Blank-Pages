@@ -24,14 +24,13 @@ class Connection_Details(object):
 		self.file_path = env["psql_file_path"] = get_file_path() + "\\blank_pages_db.sql"
 	
 def conn_creator(func):
-	def wrapper(*args, **kwargs):
+	def wrapper(*args):
 		try:
 			conn = connect_to_db()
 			dict_cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-			vars = args[1:]
-			ret_value = func(dict_cur, vars, **kwargs)
+			ret_value = func(dict_cur, *args[1:])
 			close_connections(conn)
-		except psycopg2.Error as e:
+		except (Exception, psycopg2.DatabaseError) as e:
 			raise exc.Internal_Error("A database error occurred", e)
 		return ret_value
 	return wrapper

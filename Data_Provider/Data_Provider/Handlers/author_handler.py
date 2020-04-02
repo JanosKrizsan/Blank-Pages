@@ -39,11 +39,11 @@ class Author_Handler(Queries):
 		super().update_data("authors", create_val_string(values), search_column, phrase)
 
 	def add_data(self, values):
-		vals = [values[0], hash_n_salt_pass(values[1])]
-		super().add_data("authors", "name, password", values)
+		vals = [values[0], hash_n_salt_pass(values[1]).decode("utf-8")]
+		super().add_data("authors", ["name", "password"], vals)
 
-	def delete_data(self, phrase):
-		super().delete_data("authors", "name", phrase)
+	def delete_data(self, search_column, phrase):
+		super().delete_data("authors", search_column, phrase)
 
 	def wipe_data(self):
 		super().wipe_data("authors")

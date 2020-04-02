@@ -17,14 +17,14 @@ class Query_Handler(object):
 		cursor.execute(
         sql.SQL("""
 			SELECT {fields} from blank_pages.{table}
-			WHERE {search_column} = '{phrase}';
+			WHERE {search_column}='{phrase}';
 		""").
             format(fields=sql.Identifier(fields_),
 				table=sql.Identifier(table_),
 				searc_column=sql.Identifier(search_column_),
-                   phrase=sql.Identifier(search_phrase)))
+                   phrase=sql.Literal(search_phrase)))
 		entry = cursor.fetchone()
-		if entry == None:
+		if entry is None:
 			raise exc.No_Content("The entry sought out does not exist.")
 		return entry
 
@@ -34,7 +34,6 @@ class Query_Handler(object):
 		cursor.execute(
         sql.SQL("SELECT * FROM blank_pages.{table};").
             format(table=sql.Identifier(table_)))
-
 		entries = cursor.fetchall()
 		if entries == []:
 			raise exc.No_Content("The entries sought out do not exist.")
@@ -55,12 +54,14 @@ class Query_Handler(object):
 
 	@conn_creator
 	def add_data(cursor, table_, columns_, values_):
-		cursor.execute(sql.SQL("""
-			INSERT INTO blank_pages.{table} ({columns})
-			VALUES ({values});
-		""").format(table=sql.Identifier(table_),
-					columns=sql.Identifier(columns_),
-					values=sql.Identifier(values_)))
+		query = sql.SQL("""
+			INSERT INTO blank_pages.{} ({})
+			VALUES ({});
+		""").format(sql.Identifier(table_),
+					sql.SQL(",").join(map(sql.Identifier, columns_)),
+					sql.SQL(",").join(map(sql.Literal, values_)))
+		quer = query.as_string(cursor)
+		cursor.execute(query)
 
 	@conn_creator
 	def delete_data(cursor, table_, search_column_, phrase_):
@@ -68,7 +69,7 @@ class Query_Handler(object):
 		sql.SQL("DELETE FROM blank_pages.{table} WHERE {search_column} = '{phrase}';").
 			format(table=sql.Identifier(table_),
 					search_column=sql.Identifier(search_column_),
-					phrase=sql.Identifier(phrase_)))
+					phrase=sql.Literal(phrase_)))
 
 	@conn_creator
 	def wipe_data(cursor, table_):

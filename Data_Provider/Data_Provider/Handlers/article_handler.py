@@ -30,7 +30,7 @@ class Article_Handler(Queries):
 
 	def add_data(self, values):
 		#TODO -> make sure the data is saved to XML here
-		columns = "title, sub_title, full_file_path, author_id, creation_date"
+		columns = ["title", "sub_title", "full_file_path", "author_id", "creation_date"]
 		super().add_data("articles", columns, values)
 
 	def delete_data(self, search_column, phrase):

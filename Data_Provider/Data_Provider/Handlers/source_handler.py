@@ -26,7 +26,7 @@ class Source_Handler(Queries):
 		super().update_data("sources", create_val_string(values), search_column, phrase)
 
 	def add_data(self, values):
-		super().add_data("sources", "name, source_data, parent_article_id", values)
+		super().add_data("sources", ["name", "source_data", "parent_article_id"], values)
 
 	def delete_data(self, search_column, phrase):
 		super().delete_data("sources", search_column, phrase)

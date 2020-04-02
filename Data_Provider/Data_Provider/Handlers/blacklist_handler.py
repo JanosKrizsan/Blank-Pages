@@ -19,7 +19,7 @@ class Blacklist_Handler(Queries):
 		return addresses
 
 	def add_data(self, values):
-		columns = "address, author_id" if len(values) == 2 else "address"
+		columns = ["address", "author_id"] if len(values) == 2 else ["address"]
 		super().add_data("blacklist", columns, values)
 
 	def update_data(self, values, search_column, phrase):

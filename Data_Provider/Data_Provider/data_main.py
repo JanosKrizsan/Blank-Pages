@@ -55,11 +55,11 @@ def register_user():
     user_name = request.get_json()["username"]
     pass_word = request.get_json()["password"]
     address = request.remote_addr
-    if not comm.check_user_validity(user_name):
+    if comm.check_user_validity(user_name) is False:
         return comm.create_response(108)
-    elif not comm.check_address_validity(address):
+    elif comm.check_address_validity(address) is False:
         return comm.create_error_response(401)
-    comm.post_req_handler("authors", (name, password))
+    comm.post_n_put_req_handler("authors", (user_name, pass_word))
     return comm.create_response(200)
 
 @app.route("/login", methods=["POST"])
@@ -88,7 +88,7 @@ def get_request(table, search = None, data = None):
     else:
         try:
             mass_dat = True if "all" in request.url else False
-            requested_data = comm.get_req_handler(table, search, data, mass_dat)
+            requested_data = comm.get_n_del_req_handler(table, search, data, mass_dat, True)
         except exc.Error as e:
             return comm.create_error_response(e.error_code)
     return requested_data
@@ -100,7 +100,7 @@ def post_request():
         return comm.create_error_response(400)
     else:
         data = request.get_json()
-        if comm.post_req_handler(data["table"], data["values"]):
+        if comm.post_n_put_req_handler(data["table"], data["values"]):
             return comm.create_response(201)
         return comm.create_error_response(202)
 
@@ -111,7 +111,7 @@ def put_request():
         return comm.create_error_response(400)
     else:
         data = request.get_json()
-        if comm.put_req_handler(data["table"], data["values"], data["column"], data["phrase"]):
+        if comm.post_n_put_req_handler(data["table"], data["values"], data["column"], data["phrase"]):
             return comm.create_response(211)
         return comm.create_error_response(202)
 
@@ -122,6 +122,6 @@ def delete_request():
         return comm.create_error_response(400)
     else:
         data = request.get_json()
-        if comm.del_req_handler(data["table"], data["phrase"], data["mass_dat"]):
+        if comm.get_n_del_req_handler(data["table"], data["search_column"], data["phrase"], data["mass_dat"], False):
             return comm.create_response(219)
         return comm.create_error_response(202)
