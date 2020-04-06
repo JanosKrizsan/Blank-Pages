@@ -55,9 +55,9 @@ def register_user():
     user_name = request.get_json()["username"]
     pass_word = request.get_json()["password"]
     address = request.remote_addr
-    if comm.check_user_validity(user_name) is False:
+    if comm.check_user_validity(user_name):
         return comm.create_response(108)
-    elif comm.check_address_validity(address) is False:
+    elif comm.check_address_validity(address):
         return comm.create_error_response(401)
     comm.post_n_put_req_handler("authors", (user_name, pass_word))
     return comm.create_response(200)

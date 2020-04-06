@@ -29,9 +29,10 @@ def conn_creator(func):
 			conn = connect_to_db()
 			dict_cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 			ret_value = func(dict_cur, *args[1:])
-			close_connections(conn)
 		except (Exception, psycopg2.DatabaseError) as e:
 			raise exc.Internal_Error("A database error occurred", e)
+		finally:
+			close_connections(conn)
 		return ret_value
 	return wrapper
 

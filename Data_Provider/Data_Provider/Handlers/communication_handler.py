@@ -18,7 +18,7 @@ sources = source_handler.Source_Handler(creds[0], creds[1], creds[2])
 addresses = blacklist_handler.Blacklist_Handler(creds[0], creds[1], creds[2])
 
 def create_response(stat_code, obj = None):
-	data = json.dumps(obj) if obj != None else "{No Response Data = {}}".format(get_status(stat_code))
+	data = json.dumps(obj) if obj is not None else json.dumps({"No Data" : get_status(stat_code)})
 	return Response(
 			response=data,
 			status=stat_code,
