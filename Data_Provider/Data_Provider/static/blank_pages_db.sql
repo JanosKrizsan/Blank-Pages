@@ -1,7 +1,7 @@
 CREATE TABLE blank_pages.authors (
 	id SERIAL PRIMARY KEY,
 	name VARCHAR(30) NOT NULL UNIQUE,
-	password VARCHAR(100) NOT NULL
+	password TEXT NOT NULL
 );
 
 CREATE TABLE blank_pages.articles (
@@ -17,7 +17,7 @@ CREATE TABLE blank_pages.articles (
 CREATE TABLE blank_pages.sources (
 	id SERIAL PRIMARY KEY,
 	name VARCHAR(30) NOT NULL UNIQUE,
-	source_data VARCHAR(100) NOT NULL,
+	source_data VARCHAR NOT NULL,
 	parent_article_id int,
 	FOREIGN KEY(parent_article_id) REFERENCES blank_pages.articles(id) ON DELETE CASCADE ON UPDATE CASCADE
 );

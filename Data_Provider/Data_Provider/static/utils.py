@@ -10,12 +10,15 @@ import datetime
 import bcrypt
 import xml.etree.ElementTree as et
 import io
+import hashlib, uuid
 
-def hash_n_salt_pass(password):
-	return bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+def hash_pass(password):
+	hash = hashlib.sha512((password + "random_salt").encode('utf-8')).hexdigest()
+	return hash
 
 def check_hash_n_pass(hash, password):
-	return hash == hash_n_salt_pass(password).decode("utf-8")
+	newhash = hash_pass(password)
+	return hash == newhash
 
 def create_val_string(values):
 	string_vals = []

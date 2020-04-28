@@ -3,7 +3,7 @@ Handles author related queries.
 """
 
 from .query_handler import Query_Handler as Queries
-from Data_Provider.Static.utils import create_val_string, create_author, hash_n_salt_pass
+from Data_Provider.Static.utils import create_val_string, create_author, hash_pass
 import bcrypt
 
 class Author_Handler(Queries):
@@ -35,11 +35,11 @@ class Author_Handler(Queries):
 					pass_placement = values[i + 1]
 					break
 		password = values[pass_placement]
-		values[pass_placement] = hash_n_salt_pass(password)
+		values[pass_placement] = hash_pass(password)
 		super().update_data("authors", create_val_string(values), search_column, phrase)
 
 	def add_data(self, values):
-		vals = [values[0], hash_n_salt_pass(values[1])]
+		vals = [values[0], hash_pass(values[1])]
 		super().add_data("authors", ["name", "password"], vals)
 
 	def delete_data(self, search_column, phrase):

@@ -15,14 +15,14 @@ class Query_Handler(object):
 	@conn_creator
 	def get_data(cursor, fields_, table_, search_column_, search_phrase):
 		cursor.execute(
-        sql.SQL("""
+		sql.SQL("""
 			SELECT {} from blank_pages.{}
 			WHERE {}={};
 		""").
-            format(sql.SQL(",").join(map(sql.Identifier, fields_)),
+			format(sql.SQL(",").join(map(sql.Identifier, fields_)),
 				sql.Identifier(table_),
 				sql.Identifier(search_column_),
-                sql.Literal(search_phrase)))
+				sql.Literal(search_phrase)))
 		entry = cursor.fetchone()
 		if entry is None:
 			raise exc.No_Content("The entry sought out does not exist.")
@@ -32,8 +32,8 @@ class Query_Handler(object):
 	def get_all_data(cursor, vals):
 		table_ = vals[0]
 		cursor.execute(
-        sql.SQL("SELECT * FROM blank_pages.{table};").
-            format(table=sql.Identifier(table_)))
+		sql.SQL("SELECT * FROM blank_pages.{table};").
+			format(table=sql.Identifier(table_)))
 		entries = cursor.fetchall()
 		if entries == []:
 			raise exc.No_Content("The entries sought out do not exist.")
@@ -42,13 +42,13 @@ class Query_Handler(object):
 	@conn_creator
 	def update_data(cursor, table_, values_, search_column_, phrase_):
 		cursor.execute(
-        sql.SQL("""
+		sql.SQL("""
 			UPDATE blank_pages.{table}
 			SET {values}
 			WHERE {search_column} = '{phrase}';
 		""").
-            format(table=sql.Identifier(table_),
-                   values=sql.Identifier(values_),
+			format(table=sql.Identifier(table_),
+				   values=sql.Identifier(values_),
 				   search_column=sql.Identifier(search_column_),
 				   phrase=sql.Identifier(phrase_)))
 

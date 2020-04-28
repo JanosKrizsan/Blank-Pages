@@ -18,6 +18,10 @@ jwt = JWTManager(app)
 def internal_error(e):
     return comm.create_error_response(500)
 
+@app.errorhandler(503)
+def internal_error(e):
+    return comm.create_error_response(503)
+
 @app.errorhandler(404)
 def not_found_error(e):
     return comm.create_error_response(404)
