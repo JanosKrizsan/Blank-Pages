@@ -146,40 +146,30 @@ we need to to the following:<br>
 - Double click on it, change "Startup type" to Manual
 - If you want some convenience, copy the service's name
 
-You could do this always, manually starting it from this window, then stopping it, but it would be a hassle.
+Alternatively, you can change it to Manual using Powershell:<br>
+- Run PS as admin
+- Write the following: `Get-Servie | where Name -Ilike "*postgresql*" | Set-Service -StartupType Manual`
+- Hit enter to run, this will change the startup type of said service to manual
 
-So you could add this code to a newly created .txt file. Do not forget to change the `[SERVICE NAME]` part to the name of your
-Postgres service name. After you added it, simply save, then rename the extension to .bat.
+Now you can add the script below to a .txt file and save it with a .ps1 extension. Just start up PS and run the script with the path itself.
 
-If you want to be a really awesome guy/gal, then you can also place this .bat file (let's say "togglepostgres.bat") into your already
-added `C:\Program Files\PostgreSQL\12\bin` folder. Now if you just type in the name `togglepostgres.bat` to your command prompt, the service will toggle on-off every time. Remember, you need administrator privileges to do so!
-
+You might need to change the execution-policy, for which you can use `Set-ExecutionPolicy RemoteSigned` which will enable the running of scripts.
+Powershell script to toggle the service:
 ```
-@ECHO OFF
-SET SvcName=[SERVICE NAME]
+$psql = Get-Service | where Name -ILike "*postgresql*"
+$psqlService = $psql.Status
+Write-Output "PSQL service is currently $psqlService"
 
-SC QUERYEX "%SvcName%" | FIND "STATE" | FIND /v "RUNNING" > NUL && (
-    ECHO %SvcName% is currently not running 
-    ECHO START %SvcName%
+$toggleType = $psqlService -eq "Stopped"
+$runToggle = if ($toggleType) {$psql | Start-Service} else {$psql | Stop-Service}
+$writeOut = if ($toggleType) {'PSQL service started'} else {'PSQL service stopped.'}
 
-    NET START "%SvcName%" > NUL || (
-        ECHO "%SvcName%" cannot be started 
-        EXIT /B 1
-    )
-    ECHO "%SvcName%" has been started
-    EXIT /B 0
-) || (
-    ECHO "%SvcName%" is running
-    NET STOP "%SvcName%"
-    ECHO "%SvcName%" has been stopped
-    EXIT /B 0
-)
+$runToggle
+$writeOut
 ```
-
 
 ## Miscellaneous
 
-[Shell Script Source](https://www.brankovucinec.com/check-if-service-is-running-and-start-it-when-it-is-not-running/)<br>
 [Img Source](https://wallhaven.cc/w/ne533o)
 
 ## Disclaimer
