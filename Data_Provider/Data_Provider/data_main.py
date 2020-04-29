@@ -100,32 +100,43 @@ def get_request(table, search = None, data = None):
 @app.route("/send", methods=["POST"])
 @jwt_required
 def post_request():
-    if comm.endpoint_check(request):
+    if comm.endpoint_check(request) is False:
         return comm.create_error_response(400)
     else:
         data = request.get_json()
-        if comm.post_n_put_req_handler(data["table"], data["values"]):
+        table = data["table"]
+        values = data["values"]
+        values["username"] = get_jwt_identity()
+        if comm.post_n_put_req_handler(table, values):
             return comm.create_response(201)
         return comm.create_error_response(202)
 
 @app.route("/update", methods=["PUT"])
 @jwt_required
 def put_request():
-    if comm.endpoint_check(request):
+    if comm.endpoint_check(request) is False:
         return comm.create_error_response(400)
     else:
         data = request.get_json()
-        if comm.post_n_put_req_handler(data["table"], data["values"], data["column"], data["phrase"]):
+        table = data["table"]
+        vals = data["values"]
+        col = data["column"]
+        phrs = data["phrase"]
+        if comm.post_n_put_req_handler(table, vals, col, phrs):
             return comm.create_response(211)
         return comm.create_error_response(202)
 
 @app.route("/delete", methods=["DELETE"])
 @jwt_required
 def delete_request():
-    if comm.endpoint_check(request):
+    if comm.endpoint_check(request) is False:
         return comm.create_error_response(400)
     else:
         data = request.get_json()
-        if comm.get_n_del_req_handler(data["table"], data["search_column"], data["phrase"], data["mass_dat"], False):
+        table = data["table"]
+        s_col = data["search_column"]
+        phrs = data["phrase"]
+        mass = data["mass_dat"]
+        if comm.get_n_del_req_handler(table, s_col, phrs, mass, False):
             return comm.create_response(219)
         return comm.create_error_response(202)

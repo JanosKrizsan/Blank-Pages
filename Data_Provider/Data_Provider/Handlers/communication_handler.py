@@ -8,6 +8,7 @@ from Data_Provider.Static.creds import psql_creds
 from Data_Provider.Models.statuses import get_status
 import Data_Provider.Models.exceptions as exc
 from flask import json, Response, make_response
+import datetime as dt
 
 creds = psql_creds()
 data_error = "Invalid data provided."
@@ -39,8 +40,17 @@ def get_check(table, search, data):
 	return any(rules)
 
 def post_n_put_req_handler(table, vals, col = None, phrase = None):
+	#need to get author_id and current date for Articles
+	#need to get article_id for Sources
 	init_add_data = col is None and phrase is None
 	if init_add_data:
+		curr_date = dt.datetime if "ar" in table else None
+		parent_id = authors.get_data("name", vals["username"]).prop_id if "ar" in table else articles.get_data("name", vals["article_name"]) if "so" in table else None
+		if ("ar" in table):
+			vals["author_id"] = parent_id
+			vals["creation_date"] = curr_date
+		elif ("so" in table):
+			vals["parent_article_id"] = parent_id
 		func = authors.add_data if "au" in table else articles.add_data if "ar" in table else sources.add_data if "so" in table else addresses.add_data if "bl" in table else None
 	else:
 		func = authors.update_data if "au" in table else articles.update_data if "ar" in table else sources.update_data if "so" in table else addresses.update_data if "bl" in table else None
