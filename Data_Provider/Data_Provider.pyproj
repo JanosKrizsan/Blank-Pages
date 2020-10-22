@@ -29,73 +29,38 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Data_Provider\Handlers\author_handler.py" />
     <Compile Include="Data_Provider\Handlers\article_handler.py" />
-    <Compile Include="Data_Provider\Handlers\blacklist_handler.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data_Provider\Handlers\communication_handler.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data_Provider\Handlers\__init__.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data_Provider\Handlers\source_handler.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data_Provider\Handlers\query_handler.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data_Provider\Handlers\connection_handler.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data_Provider\Models\article.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data_Provider\Models\author.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data_Provider\Models\author_id_base.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data_Provider\Models\exceptions.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data_Provider\Models\address.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data_Provider\Models\id_base.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data_Provider\Models\model_base.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data_Provider\Models\statuses.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data_Provider\Models\__init__.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data_Provider\Models\source.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data_Provider\Static\creds.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data_Provider\Static\utils.py">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Data_Provider\Handlers\author_handler.py" />
+    <Compile Include="Data_Provider\Handlers\blacklist_handler.py" />
+    <Compile Include="Data_Provider\Handlers\communication_handler.py" />
+    <Compile Include="Data_Provider\Handlers\connection_handler.py" />
+    <Compile Include="Data_Provider\Handlers\query_handler.py" />
+    <Compile Include="Data_Provider\Handlers\source_handler.py" />
+    <Compile Include="Data_Provider\Handlers\__init__.py" />
+    <Compile Include="Data_Provider\Models\address.py" />
+    <Compile Include="Data_Provider\Models\article.py" />
+    <Compile Include="Data_Provider\Models\author.py" />
+    <Compile Include="Data_Provider\Models\author_id_base.py" />
+    <Compile Include="Data_Provider\Models\exceptions.py" />
+    <Compile Include="Data_Provider\Models\id_base.py" />
+    <Compile Include="Data_Provider\Models\model_base.py" />
+    <Compile Include="Data_Provider\Models\source.py" />
+    <Compile Include="Data_Provider\Models\statuses.py" />
+    <Compile Include="Data_Provider\Models\__init__.py" />
+    <Compile Include="Data_Provider\Statics\creds.py" />
+    <Compile Include="Data_Provider\Statics\utils.py" />
+    <Compile Include="Data_Provider\Statics\__init__.py" />
     <Compile Include="runserver.py" />
     <Compile Include="Data_Provider\data_main.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data_Provider\" />
-    <Folder Include="Data_Provider\Models\" />
     <Folder Include="Data_Provider\Handlers\" />
-    <Folder Include="Data_Provider\Static\" />
+    <Folder Include="Data_Provider\Models\" />
+    <Folder Include="Data_Provider\Statics\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Data_Provider\Static\blank_pages_db.sql" />
+    <Content Include="Data_Provider\Statics\blank_pages_db.sql" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>

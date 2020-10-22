@@ -3,7 +3,7 @@ Handles author related queries.
 """
 
 from .query_handler import Query_Handler as Queries
-from Data_Provider.Static.utils import create_val_string, create_author, hash_pass
+from Data_Provider.Statics.utils import create_val_string, create_author, hash_pass
 import bcrypt
 
 class Author_Handler(Queries):

@@ -1,4 +1,4 @@
-from Data_Provider.Static.utils import create_address, create_val_string
+from Data_Provider.Statics.utils import create_address, create_val_string
 from .query_handler import Query_Handler as Queries
 
 class Blacklist_Handler(Queries):

@@ -47,9 +47,9 @@ def get_file_path():
 	base = None
 	dirs =[dir for dir in os.listdir(os.path.abspath(os.getcwd())) if os.path.isdir(dir)]
 	for dir in dirs:
-		if "Static" in os.listdir(dir):
-			base = os.path.abspath(dir) + "\Static"
+		if "Statics" in os.listdir(dir):
+			base = os.path.abspath(dir) + "\Statics"
 			break
 	if base == None:
-		raise FileNotFoundError("The file or 'static' folder could not be found.")
+		raise FileNotFoundError("The file or 'statics' folder could not be found.")
 	return base

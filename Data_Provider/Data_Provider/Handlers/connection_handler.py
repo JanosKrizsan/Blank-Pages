@@ -8,7 +8,7 @@ import itertools
 import io
 import os
 from psycopg2 import sql
-from Data_Provider.Static.creds import get_file_path
+from Data_Provider.Statics.creds import get_file_path
 import Data_Provider.Models.exceptions as exc
 
 class Connection_Details(object):

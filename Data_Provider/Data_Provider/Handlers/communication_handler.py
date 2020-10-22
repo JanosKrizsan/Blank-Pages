@@ -3,8 +3,8 @@ Handles requests and responses.
 """
 
 from Data_Provider.Handlers import article_handler, author_handler, source_handler, blacklist_handler
-from Data_Provider.Static.utils import check_hash_n_pass
-from Data_Provider.Static.creds import psql_creds
+from Data_Provider.Statics.utils import check_hash_n_pass
+from Data_Provider.Statics.creds import psql_creds
 from Data_Provider.Models.statuses import get_status
 import Data_Provider.Models.exceptions as exc
 from flask import json, Response, make_response
